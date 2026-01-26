@@ -1,0 +1,217 @@
+# Configuration for Croatian Hate Speech Detection Project
+# Detection of Hidden Hate Speech and Conspiracy Theory Narratives
+
+project:
+  name: "Croatian Hate Speech Detection"
+  version: "1.0.0"
+  authors:
+    - "Duje Jurić"
+    - "Teo Matošević"
+    - "Teo Radolović"
+
+# Data paths
+data:
+  raw_dir: "data/raw"
+  processed_dir: "data/processed"
+  annotations_dir: "data/annotations"
+  lexicon_path: "data/lexicon/coded_terms.json"
+
+  # External datasets
+  external:
+    frenk_dataset: "classla/FRENK-hate-hr"
+    clarin_24sata: "https://www.clarin.si/repository/xmlui/handle/11356/1399"
+
+# Scraping configuration
+scraping:
+  sources:
+    - name: "index.hr"
+      base_url: "https://www.index.hr"
+      target_sections: ["vijesti", "hrvatska", "eu", "svijet"]
+      comment_selector: ".comment-content"
+    - name: "24sata.hr"
+      base_url: "https://www.24sata.hr"
+      target_sections: ["news", "hrvatska", "eu"]
+      comment_selector: ".article-comment"
+
+  target_topics:
+    - "migranti"
+    - "izbjeglice"
+    - "EU"
+    - "covid"
+    - "cjepivo"
+    - "vakcinacija"
+    - "srbi"
+    - "lgbt"
+    - "pride"
+
+  rate_limit:
+    requests_per_minute: 20
+    delay_seconds: 3
+
+  output_format: "jsonl"
+
+# Preprocessing configuration
+preprocessing:
+  classla:
+    language: "hr"
+    type: "nonstandard"  # For internet text
+    processors: "tokenize,pos,lemma"
+
+  text_cleaning:
+    lowercase: false
+    remove_urls: true
+    remove_mentions: true
+    remove_emojis: false  # Emojis may carry sentiment
+    min_length: 10
+    max_length: 512
+
+# Annotation configuration
+annotation:
+  labels:
+    primary:
+      - code: "ACC"
+        name: "Acceptable"
+        description: "No problematic content"
+      - code: "EHS"
+        name: "Explicit Hate Speech"
+        description: "Direct slurs, threats, dehumanization"
+      - code: "IHS"
+        name: "Implicit/Coded Hate Speech"
+        description: "Dog whistles, sarcasm, coded terms"
+      - code: "CON"
+        name: "Conspiracy Theory"
+        description: "Secret plots, cover-ups, hidden agents"
+      - code: "OFF"
+        name: "Offensive"
+        description: "Rude but not targeting protected groups"
+
+    targets:
+      - code: "TGT_MIG"
+        name: "Migrants/Refugees"
+      - code: "TGT_SRB"
+        name: "Ethnic Serbs"
+      - code: "TGT_LGBT"
+        name: "LGBTQ+ community"
+      - code: "TGT_ROM"
+        name: "Roma"
+      - code: "TGT_ELT"
+        name: "Media/Elites"
+
+    conspiracy_types:
+      - code: "CT_REP"
+        name: "Great Replacement"
+      - code: "CT_COV"
+        name: "COVID conspiracies"
+      - code: "CT_NWO"
+        name: "New World Order"
+      - code: "CT_VAX"
+        name: "Anti-vaccination"
+      - code: "CT_HIS"
+        name: "Historical revisionism"
+
+  agreement:
+    min_annotators: 2
+    target_alpha: 0.6
+
+# Model configuration
+models:
+  # Baseline: TF-IDF + Classical ML
+  baseline:
+    vectorizer:
+      type: "tfidf"
+      max_features: 10000
+      ngram_range: [1, 2]
+      min_df: 2
+      max_df: 0.95
+
+    classifiers:
+      - name: "logistic_regression"
+        params:
+          C: 1.0
+          class_weight: "balanced"
+          max_iter: 1000
+      - name: "svm"
+        params:
+          C: 1.0
+          class_weight: "balanced"
+          kernel: "linear"
+
+  # Main model: Fine-tuned BERTić
+  bertic:
+    model_name: "classla/bcms-bertic"
+    pretrained_hate: "classla/bcms-bertic-frenk-hate"
+
+    architecture:
+      num_labels: 5  # ACC, EHS, IHS, CON, OFF
+      hidden_dropout_prob: 0.1
+      classifier_dropout: 0.1
+
+    training:
+      learning_rate: 2.0e-5
+      batch_size: 16
+      num_epochs: 1
+      warmup_ratio: 0.1
+      weight_decay: 0.01
+      max_length: 256
+      gradient_accumulation_steps: 2
+
+    loss:
+      type: "focal"  # focal loss for class imbalance
+      gamma: 2.0
+      alpha: 1.0
+
+  # Advanced: Lexicon-enhanced model
+  lexicon_enhanced:
+    base_model: "classla/bcms-bertic"
+    lexicon_embedding_dim: 64
+    combine_method: "concat"  # concat or attention
+
+# Training configuration
+training:
+  seed: 42
+  device: "cuda"  # cuda or cpu
+
+  data_split:
+    train: 0.70
+    val: 0.15
+    test: 0.15
+    stratify: true
+
+  early_stopping:
+    patience: 3
+    min_delta: 0.001
+    monitor: "val_f1_macro"
+
+  checkpointing:
+    save_best: true
+    save_last: true
+    output_dir: "checkpoints"
+
+# Evaluation configuration
+evaluation:
+  metrics:
+    - "accuracy"
+    - "f1_macro"
+    - "f1_weighted"
+    - "precision_macro"
+    - "recall_macro"
+    - "auroc"
+    - "mcc"  # Matthews Correlation Coefficient
+
+  statistical_tests:
+    bootstrap_samples: 1000
+    confidence_level: 0.95
+    mcnemar_test: true
+
+  error_analysis:
+    sample_size: 50
+    per_class: true
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  output_dir: "logs"
+  wandb:
+    enabled: false
+    project: "croatian-hate-speech"

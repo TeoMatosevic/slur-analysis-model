@@ -1,0 +1,351 @@
+{
+  "metadata": {
+    "description": "Croatian coded language (dog whistle) lexicon for hate speech detection",
+    "project": "Detection of Hidden Hate Speech and Conspiracy Theory Narratives",
+    "version": "1.0.0",
+    "last_updated": "2026-01-26",
+    "contributors": [
+      "Duje Jurić",
+      "Teo Matošević",
+      "Teo Radolović"
+    ]
+  },
+  "target_groups": {
+    "TGT_MIG": "Migrants/Refugees",
+    "TGT_SRB": "Ethnic Serbs",
+    "TGT_LGBT": "LGBTQ+ community",
+    "TGT_ROM": "Roma",
+    "TGT_ELT": "Media/Elites/Globalists",
+    "TGT_POL": "Political groups",
+    "TGT_VAX": "Vaccinated/Unvaccinated",
+    "TGT_OTH": "Other"
+  },
+  "implicitness_levels": {
+    "IMP_LI": "Language-independent (sarcasm, euphemisms)",
+    "IMP_HR": "Croatian-specific (requires language knowledge)",
+    "IMP_CTX": "Context-dependent (requires world/local knowledge)"
+  },
+  "coded_terms": [
+    {
+      "id": "CT001",
+      "term": "inženjeri",
+      "literal_meaning": "engineers",
+      "coded_meaning": "immigrants/refugees (sarcastic reference to claimed professional skills)",
+      "target_group": "TGT_MIG",
+      "implicitness": "IMP_HR",
+      "sentiment": "negative",
+      "frequency": "high",
+      "first_observed": "2015",
+      "related_terms": [
+        "doktori",
+        "specijalisti",
+        "stručnjaci"
+      ],
+      "example_usage": "Opet su inženjeri napravili nered u centru grada.",
+      "example_translation": "The engineers caused trouble in the city center again.",
+      "notes": "Emerged during 2015 European migrant crisis. Sarcastically mocks claims about migrants' professional qualifications."
+    },
+    {
+      "id": "CT002",
+      "term": "doktori",
+      "literal_meaning": "doctors",
+      "coded_meaning": "immigrants/refugees (sarcastic)",
+      "target_group": "TGT_MIG",
+      "implicitness": "IMP_HR",
+      "sentiment": "negative",
+      "frequency": "high",
+      "first_observed": "2015",
+      "related_terms": [
+        "inženjeri",
+        "specijalisti"
+      ],
+      "example_usage": "Trebali bi zahvaliti doktorima na kulturnom obogaćenju.",
+      "example_translation": "We should thank the doctors for the cultural enrichment.",
+      "notes": "Similar usage to 'inženjeri', often used together."
+    },
+    {
+      "id": "CT003",
+      "term": "kulturno obogaćenje",
+      "literal_meaning": "cultural enrichment",
+      "coded_meaning": "crimes/problems caused by immigrants (sarcastic)",
+      "target_group": "TGT_MIG",
+      "implicitness": "IMP_LI",
+      "sentiment": "negative",
+      "frequency": "high",
+      "first_observed": "2015",
+      "related_terms": [
+        "multikulturalizam",
+        "raznolikost"
+      ],
+      "example_usage": "Još jedno kulturno obogaćenje u Zagrebu.",
+      "example_translation": "Another cultural enrichment in Zagreb.",
+      "notes": "Used sarcastically to describe negative incidents involving migrants."
+    },
+    {
+      "id": "CT004",
+      "term": "globalisti",
+      "literal_meaning": "globalists",
+      "coded_meaning": "shadowy elites controlling world affairs (conspiracy)",
+      "target_group": "TGT_ELT",
+      "implicitness": "IMP_LI",
+      "sentiment": "negative",
+      "frequency": "high",
+      "first_observed": "2016",
+      "related_terms": [
+        "soroševci",
+        "duboka država",
+        "NWO"
+      ],
+      "example_usage": "Globalisti nam nameću svoju agendu.",
+      "example_translation": "The globalists are imposing their agenda on us.",
+      "notes": "Common in conspiracy theory narratives."
+    },
+    {
+      "id": "CT005",
+      "term": "soroševci",
+      "literal_meaning": "Soros people/followers",
+      "coded_meaning": "people allegedly funded by George Soros, NGOs, liberals (conspiracy)",
+      "target_group": "TGT_ELT",
+      "implicitness": "IMP_CTX",
+      "sentiment": "negative",
+      "frequency": "medium",
+      "first_observed": "2017",
+      "related_terms": [
+        "globalisti",
+        "udruge",
+        "nevladine organizacije"
+      ],
+      "example_usage": "To su sve soroševci koji mrze svoju državu.",
+      "example_translation": "They're all Soros people who hate their own country.",
+      "notes": "Antisemitic undertones, targets NGOs and civil society."
+    },
+    {
+      "id": "CT006",
+      "term": "ovce",
+      "literal_meaning": "sheep",
+      "coded_meaning": "vaccinated people / people who follow government guidelines (dehumanizing)",
+      "target_group": "TGT_VAX",
+      "implicitness": "IMP_LI",
+      "sentiment": "negative",
+      "frequency": "high",
+      "first_observed": "2020",
+      "related_terms": [
+        "stado",
+        "ovčice",
+        "pokusni kunići"
+      ],
+      "example_usage": "Samo ovce vjeruju svemu što im kažu.",
+      "example_translation": "Only sheep believe everything they're told.",
+      "notes": "Dehumanizing term for compliant citizens during COVID pandemic."
+    },
+    {
+      "id": "CT007",
+      "term": "pokusni kunići",
+      "literal_meaning": "guinea pigs",
+      "coded_meaning": "vaccinated people (conspiracy theory about experimental vaccines)",
+      "target_group": "TGT_VAX",
+      "implicitness": "IMP_LI",
+      "sentiment": "negative",
+      "frequency": "medium",
+      "first_observed": "2021",
+      "related_terms": [
+        "ovce",
+        "eksperiment"
+      ],
+      "example_usage": "Svi ste postali pokusni kunići farmaceutske industrije.",
+      "example_translation": "You've all become guinea pigs for the pharmaceutical industry.",
+      "notes": "Used in anti-vaccination discourse."
+    },
+    {
+      "id": "CT008",
+      "term": "lobi",
+      "literal_meaning": "lobby",
+      "coded_meaning": "powerful interest groups pushing hidden agendas (often LGBTQ+)",
+      "target_group": "TGT_LGBT",
+      "implicitness": "IMP_CTX",
+      "sentiment": "negative",
+      "frequency": "medium",
+      "first_observed": "2013",
+      "related_terms": [
+        "agenda",
+        "ideologija"
+      ],
+      "example_usage": "To je sve dio LGBT lobija.",
+      "example_translation": "That's all part of the LGBT lobby.",
+      "notes": "Often combined with 'LGBT lobi' or 'gay lobi'."
+    },
+    {
+      "id": "CT009",
+      "term": "agenda",
+      "literal_meaning": "agenda",
+      "coded_meaning": "hidden plan to change society (negative connotation)",
+      "target_group": "TGT_ELT",
+      "implicitness": "IMP_CTX",
+      "sentiment": "negative",
+      "frequency": "high",
+      "first_observed": "2015",
+      "related_terms": [
+        "lobi",
+        "ideologija",
+        "plan"
+      ],
+      "example_usage": "Svi znamo koja je prava agenda iza toga.",
+      "example_translation": "We all know what the real agenda behind this is.",
+      "notes": "Generic conspiracy term, context determines target."
+    }
+  ],
+  "terms_to_research": [
+    "jugokomunisti",
+    "partizani (context-dependent)",
+    "ustaše (context-dependent)",
+    "četnički",
+    "oluja (political context)",
+    "Srbi (in certain contexts)",
+    "Cigani/Romi slurs",
+    "peder/pederčina",
+    "5G",
+    "čipiranje",
+    "plandemija",
+    "great reset"
+  ],
+  "user_provided_terms": [
+    {
+      "term": "specijalisti",
+      "coded_meaning": "immigrants/refugees (sarcastic)",
+      "target_group": "TGT_MIG",
+      "id": "USR010"
+    },
+    {
+      "term": "stručnjaci",
+      "coded_meaning": "immigrants/refugees (sarcastic)",
+      "target_group": "TGT_MIG",
+      "id": "USR011"
+    },
+    {
+      "term": "duboka država",
+      "coded_meaning": "deep state conspiracy",
+      "target_group": "TGT_ELT",
+      "id": "USR012"
+    },
+    {
+      "term": "NWO",
+      "coded_meaning": "New World Order",
+      "target_group": "TGT_ELT",
+      "id": "USR013"
+    },
+    {
+      "term": "great reset",
+      "coded_meaning": "elite conspiracy",
+      "target_group": "TGT_ELT",
+      "id": "USR014"
+    },
+    {
+      "term": "stado",
+      "coded_meaning": "vaccinated people (dehumanizing)",
+      "target_group": "TGT_VAX",
+      "id": "USR015"
+    },
+    {
+      "term": "plandemija",
+      "coded_meaning": "COVID hoax",
+      "target_group": "TGT_VAX",
+      "id": "USR016"
+    },
+    {
+      "term": "čipiranje",
+      "coded_meaning": "vaccine microchips conspiracy",
+      "target_group": "TGT_VAX",
+      "id": "USR017"
+    },
+    {
+      "term": "5G",
+      "coded_meaning": "COVID/radiation conspiracy",
+      "target_group": "TGT_VAX",
+      "id": "USR018"
+    },
+    {
+      "term": "gay agenda",
+      "coded_meaning": "LGBTQ+ hidden plan",
+      "target_group": "TGT_LGBT",
+      "id": "USR019"
+    },
+    {
+      "term": "ideologija",
+      "coded_meaning": "LGBTQ+ ideology (negative)",
+      "target_group": "TGT_LGBT",
+      "id": "USR020"
+    },
+    {
+      "term": "jugokomunisti",
+      "coded_meaning": "communists/leftists (pejorative)",
+      "target_group": "TGT_POL",
+      "id": "USR021"
+    },
+    {
+      "term": "Majmun",
+      "coded_meaning": "Black people",
+      "target_group": "TGT_OTH",
+      "id": "USR022"
+    },
+    {
+      "term": "Četnik",
+      "coded_meaning": "Ethnic Serbs",
+      "target_group": "TGT_SRB",
+      "id": "USR023"
+    },
+    {
+      "term": "Doktor",
+      "coded_meaning": "immigrants/refugees",
+      "target_group": "TGT_MIG",
+      "id": "USR024"
+    },
+    {
+      "term": "Liječnik",
+      "coded_meaning": "immigrants/refugees",
+      "target_group": "TGT_MIG",
+      "id": "USR025"
+    },
+    {
+      "term": "Znanstvenik",
+      "coded_meaning": "immigrants/refugees",
+      "target_group": "TGT_MIG",
+      "id": "USR026"
+    },
+    {
+      "term": "Muslić",
+      "coded_meaning": "Muslims",
+      "target_group": "TGT_OTH",
+      "id": "USR027"
+    },
+    {
+      "term": "Bombaši",
+      "coded_meaning": "Muslims",
+      "target_group": "TGT_OTH",
+      "id": "USR028"
+    },
+    {
+      "term": "Škuri",
+      "coded_meaning": "People of Asian origin",
+      "target_group": "TGT_OTH",
+      "id": "USR029"
+    },
+    {
+      "term": "Niger",
+      "coded_meaning": "Black people",
+      "target_group": "TGT_OTH",
+      "id": "USR030"
+    },
+    {
+      "term": "Kriminalci",
+      "coded_meaning": "political groups",
+      "target_group": "TGT_POL",
+      "id": "USR031"
+    },
+    {
+      "term": "Lopovi",
+      "coded_meaning": "political groups",
+      "target_group": "TGT_POL",
+      "id": "USR032"
+    }
+  ]
+}

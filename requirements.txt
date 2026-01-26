@@ -1,0 +1,51 @@
+# Croatian NLP Project - Dependencies
+# Detection of Hidden Hate Speech and Conspiracy Theory Narratives
+
+# Core NLP Libraries
+classla>=1.2.0            # Croatian NLP pipeline (Stanford NLP fork)
+transformers>=4.35.0       # HuggingFace transformers for BERTić
+tokenizers>=0.14.0         # Fast tokenization
+
+# Deep Learning
+torch>=2.0.0               # PyTorch
+accelerate>=0.24.0         # Training acceleration
+
+# Classical ML
+scikit-learn>=1.3.0        # TF-IDF, Logistic Regression, SVM, metrics
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Data Processing
+pandas>=2.0.0              # Data manipulation
+datasets>=2.14.0           # HuggingFace datasets (for FRENK)
+
+# Web Scraping
+beautifulsoup4>=4.12.0     # HTML parsing
+selenium>=4.15.0           # Dynamic page rendering
+webdriver-manager>=4.0.0   # Automatic chromedriver management
+requests>=2.31.0           # HTTP requests
+lxml>=4.9.0                # Fast HTML/XML parsing
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+wordcloud>=1.9.0           # Word cloud visualization
+
+# Configuration & Utils
+pyyaml>=6.0                # YAML config files
+tqdm>=4.65.0               # Progress bars
+python-dotenv>=1.0.0       # Environment variables
+
+# Annotation & Evaluation
+krippendorff>=0.6.0        # Inter-annotator agreement
+statsmodels>=0.14.0        # Statistical tests
+
+# Jupyter
+jupyter>=1.0.0
+ipykernel>=6.25.0
+ipywidgets>=8.1.0
+
+# Development
+black>=23.0.0              # Code formatting
+flake8>=6.0.0              # Linting
+pytest>=7.4.0              # Testing

@@ -1,0 +1,64 @@
+# Croatian Coded Terms - Quick Add Format
+# =========================================
+# Format: term | meaning | target
+# Lines starting with # are comments
+#
+# Target codes:
+#   MIG = Migrants/Refugees
+#   SRB = Ethnic Serbs
+#   LGBT = LGBTQ+ community
+#   ROM = Roma
+#   ELT = Media/Elites/Globalists
+#   VAX = Vaccinated/Anti-vax
+#   POL = Political groups
+#   OTH = Other
+#
+# Example: plandemija | COVID hoax | VAX
+# =========================================
+
+# Migration-related sarcasm
+inženjeri | immigrants/refugees (sarcastic) | MIG
+doktori | immigrants/refugees (sarcastic) | MIG
+specijalisti | immigrants/refugees (sarcastic) | MIG
+stručnjaci | immigrants/refugees (sarcastic) | MIG
+kulturno obogaćenje | problems from migrants (sarcastic) | MIG
+
+# Elite/conspiracy terms
+globalisti | shadowy elites | ELT
+soroševci | Soros-funded liberals/NGOs | ELT
+agenda | hidden plan to change society | ELT
+duboka država | deep state conspiracy | ELT
+NWO | New World Order | ELT
+great reset | elite conspiracy | ELT
+
+# COVID/vaccine terms
+ovce | vaccinated/compliant people (dehumanizing) | VAX
+stado | vaccinated people (dehumanizing) | VAX
+pokusni kunići | vaccinated people | VAX
+plandemija | COVID hoax | VAX
+čipiranje | vaccine microchips conspiracy | VAX
+5G | COVID/radiation conspiracy | VAX
+
+# LGBTQ+ targeting
+lobi | LGBTQ+ lobby (negative) | LGBT
+gay agenda | LGBTQ+ hidden plan | LGBT
+ideologija | LGBTQ+ ideology (negative) | LGBT
+
+# Political terms
+# Note: Many political terms are context-dependent
+jugokomunisti | communists/leftists (pejorative) | POL
+
+# ADD YOUR NEW TERMS BELOW THIS LINE
+# ==================================
+
+Majmun | Black people | OTH
+Četnik | Ethnic Serbs | SRB
+Doktor | immigrants/refugees | MIG
+Liječnik | immigrants/refugees | MIG
+Znanstvenik | immigrants/refugees | MIG
+Muslić | Muslims | OTH
+Bombaši | Muslims | OTH
+Škuri | People of Asian origin | OTH
+Niger | Black people | OTH
+Kriminalci | political groups | POL
+Lopovi | political groups | POL
