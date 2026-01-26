@@ -229,6 +229,19 @@ print(matches)
 
 **NO** - The lexicon is loaded fresh every time. No re-training needed for term additions.
 
+## GPU Training
+
+For faster training on AMD or NVIDIA GPUs, see **[docs/GPU_TRAINING.md](docs/GPU_TRAINING.md)**.
+
+Quick setup for GPU:
+```bash
+# AMD ROCm
+pip install torch --index-url https://download.pytorch.org/whl/rocm6.0
+
+# NVIDIA CUDA
+pip install torch --index-url https://download.pytorch.org/whl/cu118
+```
+
 ## Key Resources
 
 - **BERTić**: [https://huggingface.co/classla/bcms-bertic](https://huggingface.co/classla/bcms-bertic)
