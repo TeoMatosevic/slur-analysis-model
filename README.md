@@ -43,12 +43,21 @@ opj/
 └── README.md
 ```
 
+## Pre-trained Models
+
+Models are available on HuggingFace Hub for easy download:
+
+| Model | HuggingFace | Description | F1-Macro |
+|-------|-------------|-------------|----------|
+| BERTić | [TeoMatosevic/croatian-hate-speech-bertic](https://huggingface.co/TeoMatosevic/croatian-hate-speech-bertic) | Fine-tuned transformer | **0.810** |
+| Baseline | [TeoMatosevic/croatian-hate-speech-baseline](https://huggingface.co/TeoMatosevic/croatian-hate-speech-baseline) | TF-IDF + Logistic Regression | 0.684 |
+
 ## Installation
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/croatian-hate-speech-detection.git
-cd croatian-hate-speech-detection
+git clone https://github.com/TeoMatosevic/slur-analysis-model.git
+cd slur-analysis-model
 
 # Create virtual environment (recommended)
 python -m venv venv
@@ -56,6 +65,9 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
+
+# Download pre-trained models from HuggingFace
+python scripts/download_models.py
 
 # Download CLASSLA models for Croatian
 python -c "import classla; classla.download('hr', type='nonstandard')"
@@ -244,7 +256,12 @@ pip install torch --index-url https://download.pytorch.org/whl/cu118
 
 ## Key Resources
 
-- **BERTić**: [https://huggingface.co/classla/bcms-bertic](https://huggingface.co/classla/bcms-bertic)
+**Our Models:**
+- **Fine-tuned BERTić**: [https://huggingface.co/TeoMatosevic/croatian-hate-speech-bertic](https://huggingface.co/TeoMatosevic/croatian-hate-speech-bertic)
+- **Baseline Model**: [https://huggingface.co/TeoMatosevic/croatian-hate-speech-baseline](https://huggingface.co/TeoMatosevic/croatian-hate-speech-baseline)
+
+**External Resources:**
+- **BERTić (base)**: [https://huggingface.co/classla/bcms-bertic](https://huggingface.co/classla/bcms-bertic)
 - **CLASSLA**: [https://github.com/clarinsi/classla](https://github.com/clarinsi/classla)
 - **CLARIN.SI Datasets**: [https://www.clarin.si/repository/](https://www.clarin.si/repository/)
 - **FRENK Hate Speech**: [https://huggingface.co/datasets/classla/FRENK-hate-hr](https://huggingface.co/datasets/classla/FRENK-hate-hr)

@@ -38,7 +38,7 @@ This work addresses two primary research questions. The first question (RQ1) exa
 
 ### 1.4 Contributions
 
-Our main contributions are fourfold. First, we fine-tune and evaluate BERTić for Croatian hate speech detection, achieving state-of-the-art results on the FRENK dataset. Second, we provide a systematic comparison of baseline ML models with transformer approaches, quantifying the performance gap between traditional and modern methods. Third, we develop a coded language lexicon containing 32 Croatian "dog whistle" terms for implicit hate speech identification. Fourth, we make our code, trained models, and lexicon publicly available for reproducibility at https://github.com/TeoMatosevic/slur-analysis-model.
+Our main contributions are fourfold. First, we fine-tune and evaluate BERTić for Croatian hate speech detection, achieving state-of-the-art results on the FRENK dataset. Second, we provide a systematic comparison of baseline ML models with transformer approaches, quantifying the performance gap between traditional and modern methods. Third, we develop a coded language lexicon containing 32 Croatian "dog whistle" terms for implicit hate speech identification. Fourth, we make our code, trained models, and lexicon publicly available for reproducibility. The code repository is available at https://github.com/TeoMatosevic/slur-analysis-model, and the pre-trained models are hosted on HuggingFace Hub at https://huggingface.co/TeoMatosevic/croatian-hate-speech-bertic (BERTić) and https://huggingface.co/TeoMatosevic/croatian-hate-speech-baseline (baseline).
 
 ## 2. Related Work
 
