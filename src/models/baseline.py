@@ -291,14 +291,35 @@ class BaselineClassifier:
                 coefs = coefs.reshape(1, -1)
 
             importance = {}
-            for i, class_name in enumerate(self.label_encoder.classes_):
-                if i < coefs.shape[0]:
-                    # Get top positive coefficients
-                    indices = np.argsort(coefs[i])[-top_n:][::-1]
-                    importance[class_name] = [
-                        (feature_names[idx], float(coefs[i, idx]))
-                        for idx in indices
-                    ]
+            if coefs.shape[0] == 1:
+                # Binary classification case
+                # coef_[0] corresponds to class 1 (alphabetically second)
+                class_0 = self.label_encoder.classes_[0]
+                class_1 = self.label_encoder.classes_[1]
+                
+                # Class 1: Top positive coefficients
+                indices_1 = np.argsort(coefs[0])[-top_n:][::-1]
+                importance[class_1] = [
+                    (feature_names[idx], float(coefs[0, idx]))
+                    for idx in indices_1
+                ]
+                
+                # Class 0: Top negative coefficients
+                indices_0 = np.argsort(coefs[0])[:top_n]
+                importance[class_0] = [
+                    (feature_names[idx], -float(coefs[0, idx]))
+                    for idx in indices_0
+                ]
+            else:
+                # Multi-class case
+                for i, class_name in enumerate(self.label_encoder.classes_):
+                    if i < coefs.shape[0]:
+                        # Get top positive coefficients for this class
+                        indices = np.argsort(coefs[i])[-top_n:][::-1]
+                        importance[class_name] = [
+                            (feature_names[idx], float(coefs[i, idx]))
+                            for idx in indices
+                        ]
 
             return importance
 
