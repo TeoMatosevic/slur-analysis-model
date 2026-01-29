@@ -137,7 +137,10 @@ class BERTicClassifier(nn.Module):
         if not TRANSFORMERS_AVAILABLE:
             raise RuntimeError("Transformers not available. Install with: pip install transformers")
 
-        self.bert = AutoModel.from_pretrained(model_name)
+        try:
+            self.bert = AutoModel.from_pretrained(model_name, local_files_only=True)
+        except Exception:
+            self.bert = AutoModel.from_pretrained(model_name)
         self.dropout = nn.Dropout(dropout)
         self.classifier = nn.Linear(self.bert.config.hidden_size, num_labels)
 
