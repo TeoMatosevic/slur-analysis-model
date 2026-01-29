@@ -264,9 +264,20 @@ pip install torch --index-url https://download.pytorch.org/whl/cu118
 | Logistic Regression | 69.0% | 0.684 | 0.689 | 0.371 |
 | SVM (Linear) | 68.5% | 0.680 | 0.684 | 0.361 |
 
-### BERTić Model
+### BERTić Model (5 epochs)
 
-Model trained (5 epochs on GPU). Evaluation pending - results TBD.
+| Model | Accuracy | F1-Macro | F1-Weighted | MCC |
+|-------|----------|----------|-------------|-----|
+| BERTić | 81.3% | 0.810 | 0.813 | 0.621 |
+
+**Per-class performance:**
+
+| Class | Precision | Recall | F1-Score | Support |
+|-------|-----------|--------|----------|---------|
+| ACC (Acceptable) | 0.777 | 0.803 | 0.790 | 929 |
+| OFF (Offensive) | 0.842 | 0.820 | 0.831 | 1191 |
+
+BERTić achieves **+18.5% F1 improvement** over baselines.
 
 ## Contributing
 
