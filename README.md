@@ -266,7 +266,7 @@ pip install torch --index-url https://download.pytorch.org/whl/cu118
 
 ### BERTić Model
 
-Training in progress. Expected F1-Macro: 0.70-0.80
+Model trained (5 epochs on GPU). Evaluation pending - results TBD.
 
 ## Contributing
 

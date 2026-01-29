@@ -78,8 +78,7 @@ def evaluate_bertic(
     trainer.load(model_path)
 
     results = trainer.evaluate(texts, labels)
-    predictions = trainer.predict(texts)
-    results['predictions'] = predictions.tolist()
+    # predictions are now included in evaluate() results
 
     return results
 
@@ -240,8 +239,9 @@ def main():
     logger.info(f"\nResults saved to {results_path}")
 
     # Generate plots
-    if 'predictions' in results and 'per_class' in results:
-        report = results['per_class']
+    report_key = 'classification_report' if 'classification_report' in results else 'per_class'
+    if 'predictions' in results and report_key in results:
+        report = results[report_key]
         class_names = [k for k in report.keys() if k not in ['accuracy', 'macro avg', 'weighted avg']]
 
         # Confusion matrix

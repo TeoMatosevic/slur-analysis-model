@@ -476,6 +476,7 @@ class BERTicTrainer:
             output_dict=True
         )
         metrics['classification_report'] = report
+        metrics['predictions'] = predictions.tolist()
 
         return metrics
 
@@ -526,7 +527,7 @@ class BERTicTrainer:
             model_name=self.model_name,
             num_labels=self.num_labels
         ).to(self.device)
-        self.model.load_state_dict(torch.load(path / 'model.pt', map_location=self.device))
+        self.model.load_state_dict(torch.load(path / 'model.pt', map_location=self.device, weights_only=False))
 
         logger.info(f"Model loaded from {path}")
 
