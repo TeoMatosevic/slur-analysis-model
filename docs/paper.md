@@ -30,73 +30,39 @@ The proliferation of social media and online news portals has led to an increase
 
 ### 1.2 Problem Statement
 
-Hate speech detection in Croatian presents unique challenges:
-
-1. **Low-resource language**: Limited availability of annotated datasets and pre-trained models compared to English creates a significant barrier for developing effective detection systems.
-2. **Morphological complexity**: Croatian is a highly inflected South Slavic language with complex morphology, including seven grammatical cases, three genders, and extensive verb conjugation.
-3. **Implicit hate speech**: Users often employ coded language ("dog whistles") and sarcasm to evade detection, using seemingly innocuous terms with hidden pejorative meanings.
+Hate speech detection in Croatian presents unique challenges that distinguish it from similar tasks in high-resource languages. First, Croatian is a low-resource language with limited availability of annotated datasets and pre-trained models compared to English, creating a significant barrier for developing effective detection systems. Second, Croatian is a highly inflected South Slavic language with complex morphology, including seven grammatical cases, three genders, and extensive verb conjugation, which increases the vocabulary size and complicates text representation. Third, users often employ coded language, commonly referred to as "dog whistles," and sarcasm to evade detection, using seemingly innocuous terms with hidden pejorative meanings that require contextual understanding to identify.
 
 ### 1.3 Research Questions
 
-This work addresses the following research questions:
-
-- **RQ1**: How effective are transformer-based models compared to traditional ML approaches for Croatian hate speech detection?
-- **RQ2**: Can models pre-trained on related South Slavic languages transfer effectively to Croatian offensive language detection?
+This work addresses two primary research questions. The first question (RQ1) examines how effective transformer-based models are compared to traditional machine learning approaches for Croatian hate speech detection. The second question (RQ2) investigates whether models pre-trained on related South Slavic languages can transfer effectively to Croatian offensive language detection.
 
 ### 1.4 Contributions
 
-Our main contributions are:
-
-1. Fine-tuning and evaluation of BERTić for Croatian hate speech detection, achieving state-of-the-art results on the FRENK dataset
-2. Systematic comparison of baseline ML models with transformer approaches, quantifying the performance gap
-3. Development of a coded language lexicon containing 32 Croatian "dog whistle" terms for implicit hate speech
-4. Publicly available code, models, and lexicon for reproducibility at: https://github.com/TeoMatosevic/slur-analysis-model
+Our main contributions are fourfold. First, we fine-tune and evaluate BERTić for Croatian hate speech detection, achieving state-of-the-art results on the FRENK dataset. Second, we provide a systematic comparison of baseline ML models with transformer approaches, quantifying the performance gap between traditional and modern methods. Third, we develop a coded language lexicon containing 32 Croatian "dog whistle" terms for implicit hate speech identification. Fourth, we make our code, trained models, and lexicon publicly available for reproducibility at https://github.com/TeoMatosevic/slur-analysis-model.
 
 ## 2. Related Work
 
 ### 2.1 Hate Speech Detection
 
-Hate speech detection has been extensively studied for English (Davidson et al., 2017; Fortuna & Nunes, 2018). Common approaches include:
-
-- **Feature-based methods**: TF-IDF, n-grams, sentiment features combined with classical ML classifiers such as Logistic Regression, SVM, and Random Forest
-- **Deep learning**: Convolutional Neural Networks (CNNs), Long Short-Term Memory networks (LSTMs), and attention mechanisms
-- **Transformers**: BERT (Devlin et al., 2019) and its variants achieving state-of-the-art results across multiple hate speech benchmarks
-
-However, most research focuses on English and other high-resource languages, leaving a gap for morphologically complex, low-resource languages like Croatian.
+Hate speech detection has been extensively studied for English (Davidson et al., 2017; Fortuna & Nunes, 2018). Common approaches can be categorized into three main paradigms. Feature-based methods employ TF-IDF, n-grams, and sentiment features combined with classical ML classifiers such as Logistic Regression, SVM, and Random Forest. Deep learning approaches utilize Convolutional Neural Networks (CNNs), Long Short-Term Memory networks (LSTMs), and attention mechanisms to capture sequential patterns in text. More recently, transformer-based models, particularly BERT (Devlin et al., 2019) and its variants, have achieved state-of-the-art results across multiple hate speech benchmarks by leveraging pre-trained contextual representations. However, most research focuses on English and other high-resource languages, leaving a gap for morphologically complex, low-resource languages like Croatian.
 
 ### 2.2 Croatian NLP Resources
 
-Recent developments in Croatian NLP include:
-
-- **CLASSLA** (Ljubešić & Dobrovoljc, 2019): A pipeline for processing South Slavic languages, supporting tokenization, lemmatization, POS tagging, and dependency parsing optimized for non-standard text commonly found in social media
-- **BERTić** (Ljubešić & Lauc, 2021): A BERT-based model pre-trained on 8 billion tokens of Bosnian, Croatian, Montenegrin, and Serbian text, providing strong contextual representations for downstream tasks
-- **FRENK dataset** (Ljubešić et al., 2018): Annotated comments from Croatian and Slovenian news portals labeled for offensive content
+Recent developments have significantly advanced the state of Croatian natural language processing. CLASSLA (Ljubešić & Dobrovoljc, 2019) provides a comprehensive pipeline for processing South Slavic languages, supporting tokenization, lemmatization, POS tagging, and dependency parsing optimized for non-standard text commonly found in social media. BERTić (Ljubešić & Lauc, 2021) is a BERT-based model pre-trained on 8 billion tokens of Bosnian, Croatian, Montenegrin, and Serbian text, providing strong contextual representations for downstream tasks. The FRENK dataset (Ljubešić et al., 2018) offers annotated comments from Croatian and Slovenian news portals labeled for offensive content, enabling supervised learning approaches for hate speech detection.
 
 ### 2.3 Croatian Hate Speech Datasets
 
-Several datasets exist for Croatian hate speech research:
-
-- **FRENK** (Ljubešić et al., 2018): News portal comments labeled as acceptable or offensive, with separate train/dev/test splits
-- **CoRAL** (Shekhar et al., 2022): Context-aware Croatian abusive language dataset incorporating conversational context
-- **24sata comments** (CLARIN.SI): Moderated comments from Croatian news portal with moderation decisions
+Several datasets exist for Croatian hate speech research, each with distinct characteristics. The FRENK dataset (Ljubešić et al., 2018) contains news portal comments labeled as acceptable or offensive, with separate train/dev/test splits suitable for model development and evaluation. CoRAL (Shekhar et al., 2022) provides a context-aware Croatian abusive language dataset incorporating conversational context to enable more nuanced classification. Additionally, the 24sata comments dataset available through CLARIN.SI contains moderated comments from a Croatian news portal with moderation decisions that reflect real-world content moderation practices.
 
 ### 2.4 Implicit Hate Speech
 
-Detecting implicit or coded hate speech remains challenging across all languages. Related work includes:
-
-- **ToxiGen** (Hartvigsen et al., 2022): Large-scale machine-generated dataset for adversarial and implicit hate speech detection
-- **Dogwhistles** (Mendelsohn et al., 2023): Taxonomy of coded speech in political discourse, demonstrating the systematic nature of implicit hate
+Detecting implicit or coded hate speech remains challenging across all languages due to its reliance on shared cultural knowledge and contextual interpretation. ToxiGen (Hartvigsen et al., 2022) represents a significant advancement in this area, providing a large-scale machine-generated dataset for adversarial and implicit hate speech detection that enables training models robust to subtle forms of toxicity. Mendelsohn et al. (2023) present a comprehensive taxonomy of coded speech in political discourse, demonstrating the systematic nature of implicit hate and the linguistic mechanisms through which hateful intent is disguised.
 
 ## 3. Methodology
 
 ### 3.1 Dataset
 
-We use the FRENK Croatian hate speech dataset (Ljubešić et al., 2018), consisting of comments from Croatian news portals. The dataset contains binary labels:
-
-- **ACC** (Acceptable): Comments without offensive content
-- **OFF** (Offensive): Comments containing hate speech, insults, or inappropriate content
-
-Tab. 1 presents the dataset statistics across training, development, and test splits.
+We use the FRENK Croatian hate speech dataset (Ljubešić et al., 2018), consisting of comments from Croatian news portals. The dataset employs binary labels where ACC (Acceptable) denotes comments without offensive content, and OFF (Offensive) denotes comments containing hate speech, insults, or inappropriate content. Tab. 1 presents the dataset statistics across training, development, and test splits.
 
 *Table 1: FRENK Dataset Statistics*
 | Split | Count | ACC | OFF |
@@ -104,45 +70,25 @@ Tab. 1 presents the dataset statistics across training, development, and test sp
 | Train | 7,965 | 3,626 (45.5%) | 4,339 (54.5%) |
 | Dev | 886 | 418 (47.2%) | 468 (52.8%) |
 | Test | 2,120 | 929 (43.8%) | 1,191 (56.2%) |
-| **Total** | **10,971** | **4,973 (45.3%)** | **5,998 (54.7%)** |
+| Total | 10,971 | 4,973 (45.3%) | 5,998 (54.7%) |
 
 *Source: Ljubešić et al. (2018)*
 
-The dataset exhibits slight class imbalance with 54.7% offensive comments, reflecting the characteristics of moderated news comment sections.
+The dataset exhibits slight class imbalance with 54.7% offensive comments, reflecting the characteristics of moderated news comment sections where problematic content tends to be over-represented in samples flagged for review.
 
 ### 3.2 Baseline Models
 
-We implement two baseline approaches using TF-IDF vectorization:
-
-**TF-IDF Features:**
-- Unigrams and bigrams (n-gram range: 1-2)
-- Maximum 10,000 features
-- Sublinear TF scaling for better performance on varying document lengths
-
-**Classifiers:**
-1. **Logistic Regression**: L2 regularization with balanced class weights to handle class imbalance
-2. **Linear SVM**: Linear kernel with balanced class weights, selected for its effectiveness on high-dimensional sparse data
+We implement two baseline approaches using TF-IDF vectorization. The feature extraction employs unigrams and bigrams with an n-gram range of 1-2, a maximum of 10,000 features, and sublinear TF scaling for better performance on varying document lengths. For classification, we evaluate two models: Logistic Regression with L2 regularization and balanced class weights to handle class imbalance, and Linear SVM with balanced class weights, selected for its effectiveness on high-dimensional sparse data typical of text classification tasks.
 
 ### 3.3 BERTić Model
 
-We fine-tune BERTić (`classla/bcms-bertic`) for sequence classification:
+We fine-tune BERTić (classla/bcms-bertic) for sequence classification. The architecture consists of the pre-trained BERTić encoder with 12 transformer layers, 768 hidden dimensions, and approximately 110 million parameters, followed by a dropout layer with probability 0.1 for regularization, and a linear classification head mapping the 768-dimensional representation to 2 output classes.
 
-**Architecture:**
-- Pre-trained BERTić encoder (12 transformer layers, 768 hidden dimensions, ~110M parameters)
-- Dropout layer (p=0.1) for regularization
-- Linear classification head (768 → 2)
-
-**Training Configuration:**
-- Learning rate: 2×10⁻⁵ with linear warmup
-- Batch size: 16
-- Epochs: 5
-- Optimizer: AdamW with weight decay
-- Warmup ratio: 0.1
-- Maximum sequence length: 256 tokens
+The training configuration employs a learning rate of 2×10⁻⁵ with linear warmup, a batch size of 16, and training for 5 epochs. We use the AdamW optimizer with weight decay, a warmup ratio of 0.1, and a maximum sequence length of 256 tokens to accommodate the varying lengths of user comments.
 
 ### 3.4 Coded Language Lexicon
 
-We compile a lexicon of 32 coded terms commonly used in Croatian online discourse. These "dog whistles" represent seemingly innocuous words used with implicit hateful meanings. Tab. 2 presents example entries.
+We compile a lexicon of 32 coded terms commonly used in Croatian online discourse. These "dog whistles" represent seemingly innocuous words used with implicit hateful meanings that require cultural and contextual knowledge to interpret. Tab. 2 presents example entries from the lexicon.
 
 *Table 2: Sample Coded Terms from Lexicon*
 | Term | Literal Meaning | Coded Meaning | Target Group |
@@ -155,17 +101,11 @@ We compile a lexicon of 32 coded terms commonly used in Croatian online discours
 
 *Source: Authors' compilation*
 
-The lexicon enables identification of implicit hate speech that may evade detection by models trained only on explicit offensive language.
+The lexicon enables identification of implicit hate speech that may evade detection by models trained only on explicit offensive language, providing a complementary approach to purely data-driven methods.
 
 ### 3.5 Evaluation Metrics
 
-We report the following metrics:
-
-- **Accuracy**: Overall classification accuracy
-- **F1-Macro**: Macro-averaged F1 score (primary metric, treating both classes equally)
-- **F1-Weighted**: Weighted F1 score accounting for class distribution
-- **Precision/Recall**: Per-class precision and recall
-- **MCC**: Matthews Correlation Coefficient, robust to class imbalance
+We report five evaluation metrics to provide a comprehensive assessment of model performance. Accuracy measures overall classification correctness. F1-Macro, our primary metric, computes the macro-averaged F1 score treating both classes equally regardless of their frequency. F1-Weighted accounts for class distribution by weighting each class's F1 score by its support. Per-class precision and recall provide insight into the trade-offs between false positives and false negatives for each category. Finally, the Matthews Correlation Coefficient (MCC) provides a balanced measure robust to class imbalance, ranging from -1 to +1 where +1 indicates perfect prediction.
 
 ## 4. Results
 
@@ -178,79 +118,48 @@ Tab. 3 presents the comparative performance of all models on the FRENK test set.
 |-------|----------|----------|-------------|-----|
 | Logistic Regression | 69.0% | 0.684 | 0.689 | 0.371 |
 | SVM (Linear) | 68.5% | 0.680 | 0.684 | 0.361 |
-| **BERTić (5 epochs)** | **81.3%** | **0.810** | **0.813** | **0.621** |
+| BERTić (5 epochs) | 81.3% | 0.810 | 0.813 | 0.621 |
 
 *Source: Authors' experiments*
 
-BERTić achieves a **+18.5% improvement** in F1-macro over the best baseline (Logistic Regression), demonstrating the substantial benefits of transfer learning for Croatian hate speech detection.
+BERTić achieves a +18.5% improvement in F1-macro over the best baseline (Logistic Regression), demonstrating the substantial benefits of transfer learning for Croatian hate speech detection.
 
 ### 4.2 Per-Class Performance
 
-Tab. 4 presents BERTić's per-class performance metrics.
+Tab. 4 presents BERTić's per-class performance metrics, revealing balanced performance across both categories.
 
 *Table 4: BERTić Per-Class Performance*
 | Class | Precision | Recall | F1-Score | Support |
 |-------|-----------|--------|----------|---------|
 | ACC (Acceptable) | 0.777 | 0.803 | 0.790 | 929 |
 | OFF (Offensive) | 0.842 | 0.820 | 0.831 | 1,191 |
-| **Macro Avg** | **0.810** | **0.812** | **0.810** | 2,120 |
+| Macro Avg | 0.810 | 0.812 | 0.810 | 2,120 |
 
 *Source: Authors' experiments*
 
 ### 4.3 Analysis
 
-Key findings from our experiments:
-
-1. **Transformer superiority**: BERTić significantly outperforms traditional ML baselines across all metrics, demonstrating the value of transfer learning from related South Slavic languages
-2. **Balanced performance**: BERTić achieves balanced precision and recall across both classes, unlike baselines which show greater variation
-3. **Offensive detection advantage**: Higher F1 for offensive class (0.831) compared to acceptable (0.790), possibly due to the slightly higher proportion of offensive samples in training data
-4. **MCC improvement**: The substantial MCC improvement (0.621 vs 0.371) indicates BERTić produces more reliable predictions accounting for class distribution
+The experimental results reveal several important findings about hate speech detection in Croatian. BERTić significantly outperforms traditional ML baselines across all metrics, demonstrating the value of transfer learning from related South Slavic languages for this task. Unlike the baselines which show greater variation between precision and recall, BERTić achieves balanced performance across both classes, indicating robust generalization. The model shows slightly higher F1 for the offensive class (0.831) compared to acceptable content (0.790), possibly due to the marginally higher proportion of offensive samples in the training data. The substantial MCC improvement from 0.371 to 0.621 indicates that BERTić produces more reliable predictions that account for class distribution, reducing both false positives and false negatives.
 
 ## 5. Discussion
 
 ### 5.1 Conclusions
 
-This paper presented a comprehensive evaluation of hate speech detection approaches for Croatian online content. Our experiments demonstrate that fine-tuned BERTić achieves an F1-macro score of 0.810 on the FRENK dataset, significantly outperforming TF-IDF baselines by 18.5%. This confirms the effectiveness of transfer learning from related South Slavic languages for downstream NLP tasks in Croatian.
-
-The model exhibits balanced performance across both acceptable and offensive content classes, making it suitable for practical deployment in content moderation systems. Additionally, our coded language lexicon provides a resource for identifying implicit hate speech expressed through Croatian "dog whistles."
+This paper presented a comprehensive evaluation of hate speech detection approaches for Croatian online content. Our experiments demonstrate that fine-tuned BERTić achieves an F1-macro score of 0.810 on the FRENK dataset, significantly outperforming TF-IDF baselines by 18.5%. This confirms the effectiveness of transfer learning from related South Slavic languages for downstream NLP tasks in Croatian. The model exhibits balanced performance across both acceptable and offensive content classes, making it suitable for practical deployment in content moderation systems. Additionally, our coded language lexicon provides a resource for identifying implicit hate speech expressed through Croatian "dog whistles."
 
 ### 5.2 Theoretical Implications
 
-Our results contribute to the understanding of NLP methods for low-resource, morphologically complex languages:
-
-1. **Transfer learning effectiveness**: BERTić's strong performance confirms that pre-training on related languages (Bosnian, Croatian, Montenegrin, Serbian) enables effective knowledge transfer, even for the challenging task of hate speech detection
-2. **Contextual understanding**: The 18.5% improvement over TF-IDF baselines suggests that contextual embeddings capture linguistic nuances that bag-of-words approaches miss, including word order, syntactic patterns, and context-dependent sentiment
-3. **Morphological handling**: The transformer architecture's subword tokenization appears to handle Croatian's rich morphology effectively, without requiring explicit morphological analysis
+Our results contribute to the understanding of NLP methods for low-resource, morphologically complex languages in several ways. BERTić's strong performance confirms that pre-training on related languages (Bosnian, Croatian, Montenegrin, Serbian) enables effective knowledge transfer, even for the challenging task of hate speech detection where subtle linguistic cues determine classification. The 18.5% improvement over TF-IDF baselines suggests that contextual embeddings capture linguistic nuances that bag-of-words approaches miss, including word order, syntactic patterns, and context-dependent sentiment. Furthermore, the transformer architecture's subword tokenization appears to handle Croatian's rich morphology effectively, without requiring explicit morphological analysis or language-specific preprocessing.
 
 ### 5.3 Practical Implications
 
-Our findings have direct implications for content moderation:
-
-1. **Deployment readiness**: The trained BERTić model can be deployed for semi-automated moderation on Croatian online platforms, significantly reducing manual moderation workload
-2. **Balanced performance**: With precision of 0.842 for offensive content, the model minimizes false positives that could affect legitimate discourse, while recall of 0.820 ensures most offensive content is flagged
-3. **Coded language awareness**: The lexicon enables detection of implicit hate speech that may evade purely data-driven approaches, providing an additional layer of protection
-4. **Open resources**: The publicly available code, models, and lexicon lower the barrier for implementing hate speech detection on Croatian platforms
+Our findings have direct implications for content moderation on Croatian online platforms. The trained BERTić model can be deployed for semi-automated moderation, significantly reducing manual moderation workload while maintaining high accuracy. With precision of 0.842 for offensive content, the model minimizes false positives that could affect legitimate discourse, while recall of 0.820 ensures most offensive content is flagged for review. The coded language lexicon enables detection of implicit hate speech that may evade purely data-driven approaches, providing an additional layer of protection against sophisticated attempts to circumvent moderation. Finally, the publicly available code, models, and lexicon lower the barrier for implementing hate speech detection on Croatian platforms, enabling smaller organizations to benefit from state-of-the-art NLP technology.
 
 ### 5.4 Limitations and Future Research
 
-Several limitations should be noted:
+Several limitations of this work should be acknowledged. The FRENK dataset uses binary labels (acceptable/offensive), which may oversimplify the hate speech spectrum and prevent more nuanced classification of different offense types. Models trained on news portal comments may not generalize well to social media platforms such as Twitter or Facebook, which exhibit different linguistic characteristics and communication norms. Language use and coded terms evolve over time, meaning the lexicon and models may require periodic updates to maintain effectiveness against emerging forms of hate speech. While we developed a lexicon of 32 coded terms, models may still struggle with highly context-dependent implicit content and novel dog whistles that emerge in online discourse. Additionally, understanding which features drive model predictions remains important for trust and legal compliance in content moderation systems.
 
-1. **Binary classification**: The FRENK dataset uses binary labels (acceptable/offensive), which may oversimplify the hate speech spectrum. Future work could explore multi-label classification distinguishing explicit hate, implicit hate, and targeted harassment.
-
-2. **Domain specificity**: Models trained on news portal comments may not generalize well to social media platforms (Twitter, Facebook) with different linguistic characteristics. Cross-domain evaluation is needed.
-
-3. **Temporal drift**: Language use and coded terms evolve over time. The lexicon and models may require periodic updates to maintain effectiveness.
-
-4. **Implicit hate speech coverage**: While we developed a lexicon of 32 coded terms, models may still struggle with highly context-dependent implicit content and emerging dog whistles.
-
-5. **Explainability**: Understanding which features drive model predictions remains important for trust and legal compliance. Future work should explore attention visualization and other interpretability methods.
-
-Future research directions include:
-- Multi-label classification distinguishing hate speech types
-- Integration of lexicon features with neural models for improved implicit hate detection
-- Cross-domain and cross-platform evaluation
-- Active learning approaches for continuous model improvement
-- Explainable AI methods for transparent moderation decisions
+Future research should address these limitations through several directions. Multi-label classification would enable distinguishing between explicit hate, implicit hate, and targeted harassment. Integration of lexicon features with neural models could improve detection of implicit hate speech by combining symbolic and neural approaches. Cross-domain and cross-platform evaluation would establish the generalizability of these methods. Active learning approaches could enable continuous model improvement as new forms of hate speech emerge. Finally, explainable AI methods would provide transparent moderation decisions that can be understood and audited by human moderators and affected users.
 
 ## References
 
