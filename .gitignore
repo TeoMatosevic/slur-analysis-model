@@ -60,9 +60,8 @@ checkpoints/
 *.pkl
 *.joblib
 
-# Downloaded/external data (can be re-downloaded)
-data/external/
-data/raw/
+# HuggingFace cache (not needed in repo)
+data/external/.cache/
 
 # Cache directories
 .cache/
