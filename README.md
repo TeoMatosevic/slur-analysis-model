@@ -29,12 +29,17 @@ opj/
 │   │   └── preprocessor.py
 │   ├── models/
 │   │   ├── baseline.py   # TF-IDF + Logistic Regression/SVM
-│   │   └── bertic.py     # Fine-tuned BERTić classifier
+│   │   ├── bertic.py     # Fine-tuned BERTić classifier
+│   │   └── xlm_roberta.py # Fine-tuned XLM-RoBERTa classifier
 │   ├── training/
 │   │   ├── train.py      # Main training script
 │   │   └── evaluate.py   # Evaluation and visualization
 │   └── utils/
 │       └── lexicon.py    # Coded term matching utilities
+├── scripts/
+│   ├── train_xlm_roberta.py       # Standalone XLM-RoBERTa training
+│   ├── run_statistical_analysis.py # Bootstrap CIs + McNemar tests
+│   └── generate_figures.py         # Confusion matrices + ROC curves
 ├── notebooks/            # Jupyter notebooks for EDA
 ├── configs/
 │   └── config.yaml       # Configuration file
@@ -50,7 +55,7 @@ Models are available on HuggingFace Hub for easy download:
 | Model | HuggingFace | Description | F1-Macro |
 |-------|-------------|-------------|----------|
 | BERTić | [TeoMatosevic/croatian-hate-speech-bertic](https://huggingface.co/TeoMatosevic/croatian-hate-speech-bertic) | Fine-tuned transformer | **0.810** |
-| Baseline | [TeoMatosevic/croatian-hate-speech-baseline](https://huggingface.co/TeoMatosevic/croatian-hate-speech-baseline) | TF-IDF + Logistic Regression | 0.684 |
+| Baseline | [TeoMatosevic/croatian-hate-speech-baseline](https://huggingface.co/TeoMatosevic/croatian-hate-speech-baseline) | TF-IDF + Logistic Regression | 0.711 |
 
 ## Installation
 
@@ -125,6 +130,9 @@ python src/training/train.py --data your_data.csv --model baseline
 
 # Train only BERTić
 python src/training/train.py --data your_data.csv --model bertic
+
+# Train XLM-RoBERTa (standalone script, auto-detects GPU)
+python scripts/train_xlm_roberta.py
 ```
 
 ### 5. Evaluate Models
@@ -188,10 +196,18 @@ text,label
 ### BERTić (Transformer)
 
 - Pre-trained on 8 billion Croatian tokens
-- Fine-tuned for multi-class classification
+- Fine-tuned for binary classification (ACC/OFF)
 - Focal loss for class imbalance
 
 Model: [classla/bcms-bertic](https://huggingface.co/classla/bcms-bertic)
+
+### XLM-RoBERTa (Multilingual Transformer)
+
+- Multilingual model pre-trained on 100 languages including Croatian
+- 278M parameters, fine-tuned for binary classification
+- Focal loss for class imbalance
+
+Model: [xlm-roberta-base](https://huggingface.co/xlm-roberta-base)
 
 ## Coded Language Lexicon
 
@@ -274,27 +290,16 @@ pip install torch --index-url https://download.pytorch.org/whl/cu118
 
 ## Results
 
-### Baseline Models (FRENK Dataset)
+### All Models (FRENK Dataset)
 
 | Model | Accuracy | F1-Macro | F1-Weighted | MCC |
 |-------|----------|----------|-------------|-----|
-| Logistic Regression | 69.0% | 0.684 | 0.689 | 0.371 |
-| SVM (Linear) | 68.5% | 0.680 | 0.684 | 0.361 |
+| Logistic Regression | 71.6% | 0.711 | 0.714 | 0.423 |
+| SVM (Linear) | 71.0% | 0.707 | 0.710 | 0.414 |
+| XLM-RoBERTa (5 epochs) | TBD | TBD | TBD | TBD |
+| BERTić (5 epochs) | 81.3% | 0.810 | 0.813 | 0.621 |
 
-### BERTić Model (5 epochs)
-
-| Model | Accuracy | F1-Macro | F1-Weighted | MCC |
-|-------|----------|----------|-------------|-----|
-| BERTić | 81.3% | 0.810 | 0.813 | 0.621 |
-
-**Per-class performance:**
-
-| Class | Precision | Recall | F1-Score | Support |
-|-------|-----------|--------|----------|---------|
-| ACC (Acceptable) | 0.777 | 0.803 | 0.790 | 929 |
-| OFF (Offensive) | 0.842 | 0.820 | 0.831 | 1191 |
-
-BERTić achieves **+18.5% F1 improvement** over baselines.
+BERTić achieves **+13.9% F1 improvement** over baselines.
 
 ## Contributing
 

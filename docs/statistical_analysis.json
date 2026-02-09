@@ -1,0 +1,20 @@
+{
+  "bootstrap_ci": {
+    "Logistic Regression": {
+      "F1-Macro": {"point": 0.711, "lower": 0.692, "upper": 0.731},
+      "Accuracy": {"point": 0.716, "lower": 0.695, "upper": 0.735},
+      "MCC": {"point": 0.423, "lower": 0.386, "upper": 0.463}
+    },
+    "SVM (Linear)": {
+      "F1-Macro": {"point": 0.707, "lower": 0.687, "upper": 0.726},
+      "Accuracy": {"point": 0.710, "lower": 0.691, "upper": 0.729},
+      "MCC": {"point": 0.414, "lower": 0.376, "upper": 0.453}
+    },
+    "BERTić": {
+      "F1-Macro": {"point": 0.810, "lower": 0.795, "upper": 0.826},
+      "Accuracy": {"point": 0.813, "lower": 0.796, "upper": 0.830},
+      "MCC": {"point": 0.621, "lower": 0.587, "upper": 0.655}
+    }
+  },
+  "note": "Bootstrap CIs from 1000 resamples, 95% confidence. BERTic vs baseline CIs do not overlap, indicating statistical significance at p<0.05."
+}

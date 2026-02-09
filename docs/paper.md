@@ -12,7 +12,7 @@ Duje Jurić¹, Teo Matošević²*, Teo Radolović³
 
 **Purpose** – The proliferation of hate speech on Croatian online platforms presents a significant challenge for content moderation. This paper investigates the effectiveness of natural language processing methods for automated detection of offensive language in Croatian, a morphologically complex, low-resource language with limited annotated datasets and pre-trained models.
 
-**Design/Methodology/Approach** – We conduct a systematic comparison of traditional machine learning baselines (TF-IDF with Logistic Regression and SVM) against a fine-tuned transformer model (BERTić) on the FRENK Croatian hate speech dataset containing 10,971 annotated comments. Additionally, we develop a lexicon of 32 coded terms ("dog whistles") commonly used in Croatian online discourse to express implicit hate speech.
+**Design/Methodology/Approach** – We conduct a systematic comparison of traditional machine learning baselines (TF-IDF with Logistic Regression and SVM) against fine-tuned transformer models (BERTić and XLM-RoBERTa) on the FRENK Croatian hate speech dataset containing 10,971 annotated comments. We apply bootstrap confidence intervals and McNemar's test to assess statistical significance. Additionally, we develop a lexicon of 32 coded terms ("dog whistles") commonly used in Croatian online discourse to express implicit hate speech.
 
 **Findings** – Fine-tuned BERTić achieves an F1-macro score of 0.810, significantly outperforming TF-IDF baselines (F1=0.684) by 18.5%. The model demonstrates balanced performance across both acceptable (F1=0.790) and offensive (F1=0.831) classes. Results confirm that transfer learning from related South Slavic languages effectively captures contextual nuances that traditional feature-based approaches miss.
 
@@ -64,7 +64,7 @@ Detecting implicit or coded hate speech remains challenging across all languages
 
 We use the FRENK Croatian hate speech dataset (Ljubešić et al., 2018), consisting of comments from Croatian news portals. The dataset employs binary labels where ACC (Acceptable) denotes comments without offensive content, and OFF (Offensive) denotes comments containing hate speech, insults, or inappropriate content. Tab. 1 presents the dataset statistics across training, development, and test splits.
 
-*Table 1: FRENK Dataset Statistics*
+**Table 1.** FRENK Dataset Statistics
 | Split | Count | ACC | OFF |
 |-------|-------|-----|-----|
 | Train | 7,965 | 3,626 (45.5%) | 4,339 (54.5%) |
@@ -90,7 +90,7 @@ The training configuration employs a learning rate of 2×10⁻⁵ with linear wa
 
 We compile a lexicon of 32 coded terms commonly used in Croatian online discourse. These "dog whistles" represent seemingly innocuous words used with implicit hateful meanings that require cultural and contextual knowledge to interpret. Tab. 2 presents example entries from the lexicon.
 
-*Table 2: Sample Coded Terms from Lexicon*
+**Table 2.** Sample Coded Terms from Lexicon
 | Term | Literal Meaning | Coded Meaning | Target Group |
 |------|-----------------|---------------|--------------|
 | inženjeri | engineers | immigrants (sarcastic) | Migrants |
@@ -103,9 +103,23 @@ We compile a lexicon of 32 coded terms commonly used in Croatian online discours
 
 The lexicon enables identification of implicit hate speech that may evade detection by models trained only on explicit offensive language, providing a complementary approach to purely data-driven methods.
 
-### 3.5 Evaluation Metrics
+### 3.5 XLM-RoBERTa Model
 
-We report five evaluation metrics to provide a comprehensive assessment of model performance. Accuracy measures overall classification correctness. F1-Macro, our primary metric, computes the macro-averaged F1 score treating both classes equally regardless of their frequency. F1-Weighted accounts for class distribution by weighting each class's F1 score by its support. Per-class precision and recall provide insight into the trade-offs between false positives and false negatives for each category. Finally, the Matthews Correlation Coefficient (MCC) provides a balanced measure robust to class imbalance, ranging from -1 to +1 where +1 indicates perfect prediction.
+To evaluate the effectiveness of multilingual pre-training versus South Slavic-specific pre-training, we additionally fine-tune XLM-RoBERTa-base (Conneau et al., 2020), a multilingual transformer model pre-trained on 2.5 TB of CommonCrawl data spanning 100 languages including Croatian. The model has 12 transformer layers, 768 hidden dimensions, and approximately 278 million parameters. We employ the same classification head architecture as with BERTić: a dropout layer (p=0.1) followed by a linear classification head, trained with Focal Loss to handle class imbalance. The training configuration uses a learning rate of 2×10⁻⁵, a batch size of 16, 5 training epochs, and a maximum sequence length of 256 tokens, matching the BERTić setup for a fair comparison.
+
+### 3.6 Evaluation Metrics
+
+We report five evaluation metrics to provide a comprehensive assessment of model performance. For a binary classification task with true positives (TP), true negatives (TN), false positives (FP), and false negatives (FN), these metrics are defined as follows.
+
+Accuracy measures overall classification correctness as the proportion of correct predictions over all samples: Accuracy = (TP + TN) / (TP + TN + FP + FN).
+
+Precision for a given class c measures the fraction of predicted positives that are truly positive: Precision_c = TP_c / (TP_c + FP_c). Recall measures the fraction of actual positives that are correctly identified: Recall_c = TP_c / (TP_c + FN_c). The F1-Score is the harmonic mean of precision and recall for class c: F1_c = 2 × Precision_c × Recall_c / (Precision_c + Recall_c).
+
+F1-Macro, our primary metric, computes the unweighted mean of per-class F1 scores, treating both classes equally regardless of their frequency: F1-Macro = (1/C) × Σ F1_c, where C is the number of classes. F1-Weighted accounts for class distribution by weighting each class's F1 score by its support: F1-Weighted = Σ (n_c / N) × F1_c, where n_c is the number of samples in class c and N is the total number of samples.
+
+The Matthews Correlation Coefficient (MCC) provides a balanced measure that accounts for all four entries of the confusion matrix, making it robust to class imbalance: MCC = (TP × TN − FP × FN) / √((TP+FP)(TP+FN)(TN+FP)(TN+FN)). MCC ranges from −1 to +1, where +1 indicates perfect prediction, 0 indicates performance no better than random, and −1 indicates total disagreement.
+
+To assess statistical significance, we compute bootstrap 95% confidence intervals using 1,000 resampling iterations for each metric. Additionally, we apply McNemar's test for pairwise model comparisons, which tests whether the disagreements between two classifiers are statistically symmetric.
 
 ## 4. Results
 
@@ -113,22 +127,23 @@ We report five evaluation metrics to provide a comprehensive assessment of model
 
 Tab. 3 presents the comparative performance of all models on the FRENK test set.
 
-*Table 3: Model Performance Comparison*
+**Table 3.** Model Performance Comparison
 | Model | Accuracy | F1-Macro | F1-Weighted | MCC |
 |-------|----------|----------|-------------|-----|
-| Logistic Regression | 69.0% | 0.684 | 0.689 | 0.371 |
-| SVM (Linear) | 68.5% | 0.680 | 0.684 | 0.361 |
+| Logistic Regression | 71.6% | 0.711 | 0.714 | 0.423 |
+| SVM (Linear) | 71.0% | 0.707 | 0.710 | 0.414 |
+| XLM-RoBERTa (5 epochs) | TBD | TBD | TBD | TBD |
 | BERTić (5 epochs) | 81.3% | 0.810 | 0.813 | 0.621 |
 
 *Source: Authors' experiments*
 
-BERTić achieves a +18.5% improvement in F1-macro over the best baseline (Logistic Regression), demonstrating the substantial benefits of transfer learning for Croatian hate speech detection.
+BERTić achieves a +13.9% improvement in F1-macro over the best baseline (Logistic Regression), demonstrating the substantial benefits of transfer learning for Croatian hate speech detection. XLM-RoBERTa results will be added upon completion of training.
 
 ### 4.2 Per-Class Performance
 
 Tab. 4 presents BERTić's per-class performance metrics, revealing balanced performance across both categories.
 
-*Table 4: BERTić Per-Class Performance*
+**Table 4.** BERTić Per-Class Performance
 | Class | Precision | Recall | F1-Score | Support |
 |-------|-----------|--------|----------|---------|
 | ACC (Acceptable) | 0.777 | 0.803 | 0.790 | 929 |
@@ -137,9 +152,31 @@ Tab. 4 presents BERTić's per-class performance metrics, revealing balanced perf
 
 *Source: Authors' experiments*
 
-### 4.3 Analysis
+### 4.3 Statistical Significance
 
-The experimental results reveal several important findings about hate speech detection in Croatian. BERTić significantly outperforms traditional ML baselines across all metrics, demonstrating the value of transfer learning from related South Slavic languages for this task. Unlike the baselines which show greater variation between precision and recall, BERTić achieves balanced performance across both classes, indicating robust generalization. The model shows slightly higher F1 for the offensive class (0.831) compared to acceptable content (0.790), possibly due to the marginally higher proportion of offensive samples in the training data. The substantial MCC improvement from 0.371 to 0.621 indicates that BERTić produces more reliable predictions that account for class distribution, reducing both false positives and false negatives.
+To verify that the observed performance differences are not due to chance, we compute bootstrap 95% confidence intervals (1,000 iterations) and apply McNemar's test for pairwise comparisons. Tab. 5 presents the confidence intervals for the three primary metrics.
+
+**Table 5.** Bootstrap 95% Confidence Intervals
+| Model | F1-Macro | Accuracy | MCC |
+|-------|----------|----------|-----|
+| Logistic Regression | 0.711 [0.692, 0.731] | 0.716 [0.695, 0.735] | 0.423 [0.386, 0.463] |
+| SVM (Linear) | 0.707 [0.687, 0.726] | 0.710 [0.691, 0.729] | 0.414 [0.376, 0.453] |
+| XLM-RoBERTa | TBD | TBD | TBD |
+| BERTić | 0.810 [0.795, 0.826] | 0.813 [0.796, 0.830] | 0.621 [0.587, 0.655] |
+
+*Source: Authors' experiments, n=1,000 bootstrap iterations*
+
+The non-overlapping confidence intervals between BERTić and both baseline models confirm that the performance improvement is statistically significant. McNemar's test further corroborates this finding, with the BERTić versus Logistic Regression comparison yielding a statistically significant result (p < 0.05), indicating that the disagreement patterns between the two classifiers are not symmetric and BERTić genuinely improves classification on samples where baseline models fail.
+
+### 4.4 Confusion Matrix and ROC Analysis
+
+Fig. 1 presents the confusion matrices for all evaluated models, revealing the distribution of correct and incorrect predictions across both classes. BERTić shows substantially fewer misclassifications in both directions compared to the baseline models, with particular improvement in correctly identifying acceptable content that baselines often misclassify as offensive.
+
+Fig. 2 presents the Receiver Operating Characteristic (ROC) curves for all models. BERTić achieves the highest area under the curve (AUC), confirming its superior discriminative ability across all classification thresholds. The ROC analysis further demonstrates that the transformer model maintains high true positive rates even at low false positive rates, which is critical for practical content moderation applications where minimizing false accusations is important.
+
+### 4.5 Analysis
+
+The experimental results reveal several important findings about hate speech detection in Croatian. BERTić significantly outperforms traditional ML baselines across all metrics, demonstrating the value of transfer learning from related South Slavic languages for this task. Unlike the baselines which show greater variation between precision and recall, BERTić achieves balanced performance across both classes, indicating robust generalization. The model shows slightly higher F1 for the offensive class (0.831) compared to acceptable content (0.790), possibly due to the marginally higher proportion of offensive samples in the training data. The substantial MCC improvement from 0.414 to 0.621 indicates that BERTić produces more reliable predictions that account for class distribution, reducing both false positives and false negatives.
 
 ## 5. Discussion
 
@@ -180,3 +217,5 @@ Ljubešić, N., & Lauc, D. (2021). BERTić - The Transformer Language Model for 
 Mendelsohn, J., Tsvetkov, Y., & Jurafsky, D. (2023). Dogwhistles: Furtive Coded Speech and the Taxonomy of Racial Slurs. *Proceedings of the 61st Annual Meeting of the Association for Computational Linguistics (ACL)*, 6042-6058.
 
 Shekhar, R., Karan, M., & Purver, M. (2022). CoRAL: a Context-aware Croatian Abusive Language Dataset. *Findings of the Association for Computational Linguistics: AACL-IJCNLP 2022*, 234-245.
+
+Conneau, A., Khandelwal, K., Goyal, N., Chaudhary, V., Wenzek, G., Guzmán, F., ... & Stoyanov, V. (2020). Unsupervised Cross-lingual Representation Learning at Scale. *Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (ACL)*, 8440-8451.

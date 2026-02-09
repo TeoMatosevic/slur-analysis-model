@@ -455,6 +455,21 @@ class BERTicTrainer:
 
         return self.label_encoder.inverse_transform(predictions)
 
+    def predict_proba(self, texts: List[str]) -> np.ndarray:
+        """Get prediction probabilities for ROC curves."""
+        self.model.eval()
+        all_probs = []
+        dataset = HateSpeechDataset(texts, [0] * len(texts), self.tokenizer, self.max_length)
+        loader = DataLoader(dataset, batch_size=self.batch_size, shuffle=False)
+        with torch.no_grad():
+            for batch in loader:
+                input_ids = batch['input_ids'].to(self.device)
+                attention_mask = batch['attention_mask'].to(self.device)
+                outputs = self.model(input_ids=input_ids, attention_mask=attention_mask)
+                probs = torch.softmax(outputs['logits'], dim=1)
+                all_probs.extend(probs.cpu().numpy())
+        return np.array(all_probs)
+
     def evaluate(self, texts: List[str], labels: List[str]) -> Dict:
         """
         Full evaluation with classification report.

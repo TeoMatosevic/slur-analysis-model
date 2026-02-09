@@ -1,6 +1,6 @@
 """
 Main training script for Croatian hate speech detection models.
-Supports baseline (TF-IDF + ML) and BERTić models.
+Supports baseline (TF-IDF + ML), BERTić, and XLM-RoBERTa models.
 """
 
 import json
@@ -177,7 +177,7 @@ def main():
                         help="Path to training data")
     parser.add_argument('--text-column', type=str, default='text')
     parser.add_argument('--label-column', type=str, default='label')
-    parser.add_argument('--model', type=str, choices=['baseline', 'bertic', 'all'],
+    parser.add_argument('--model', type=str, choices=['baseline', 'bertic', 'xlm_roberta', 'all'],
                         default='all', help="Model to train")
     parser.add_argument('--output', type=str, default='checkpoints',
                         help="Output directory")
@@ -228,6 +228,33 @@ def main():
             config, args.output
         )
         all_results['bertic'] = bertic_results
+
+    if args.model in ['xlm_roberta', 'all']:
+        try:
+            from src.models.xlm_roberta import XLMRobertaTrainer
+            logger.info("Training XLM-RoBERTa model...")
+            xlm_config = config.get('models', {}).get('xlm_roberta', {})
+            training_config = xlm_config.get('training', {})
+            xlm_output = Path(args.output) / 'xlm_roberta'
+            xlm_output.mkdir(parents=True, exist_ok=True)
+            trainer = XLMRobertaTrainer(
+                model_name=xlm_config.get('model_name', 'xlm-roberta-base'),
+                num_labels=len(set(train_labels)),
+                learning_rate=training_config.get('learning_rate', 2e-5),
+                batch_size=training_config.get('batch_size', 16),
+                max_length=training_config.get('max_length', 256),
+                num_epochs=training_config.get('num_epochs', 5),
+            )
+            history = trainer.train(
+                train_texts, train_labels,
+                val_texts, val_labels,
+                output_dir=str(xlm_output)
+            )
+            val_metrics = trainer.evaluate(val_texts, val_labels)
+            history['val_metrics'] = val_metrics
+            all_results['xlm_roberta'] = history
+        except Exception as e:
+            logger.error(f"XLM-RoBERTa training failed: {e}")
 
     # Save overall results
     results_path = Path(args.output) / 'training_results.json'

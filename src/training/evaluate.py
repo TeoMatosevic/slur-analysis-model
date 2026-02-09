@@ -174,13 +174,111 @@ def bootstrap_ci(
     return lower, upper
 
 
+def mcnemar_test(y_true, y_pred_a, y_pred_b):
+    """
+    McNemar's test for comparing two classifiers.
+    Tests if the disagreements between two classifiers are symmetric.
+    """
+    from statsmodels.stats.contingency_tables import mcnemar as mcnemar_stat
+
+    y_true = np.array(y_true)
+    y_pred_a = np.array(y_pred_a)
+    y_pred_b = np.array(y_pred_b)
+
+    correct_a = (y_pred_a == y_true)
+    correct_b = (y_pred_b == y_true)
+
+    n11 = np.sum(correct_a & correct_b)      # both correct
+    n10 = np.sum(correct_a & ~correct_b)     # a correct, b wrong
+    n01 = np.sum(~correct_a & correct_b)     # a wrong, b correct
+    n00 = np.sum(~correct_a & ~correct_b)    # both wrong
+
+    table = np.array([[n11, n10], [n01, n00]])
+    result = mcnemar_stat(table, exact=True)
+
+    return {
+        'statistic': float(result.statistic),
+        'p_value': float(result.pvalue),
+        'significant': result.pvalue < 0.05,
+        'contingency_table': table.tolist(),
+    }
+
+
+def plot_roc_curves(models_data: dict, output_path: str, title: str = "ROC Curves - Model Comparison"):
+    """
+    Plot ROC curves for multiple models.
+
+    Args:
+        models_data: {model_name: {'y_true': array, 'y_score': array}}
+            y_score should be probability of the positive class
+        output_path: path to save figure
+    """
+    from sklearn.metrics import roc_curve, auc
+
+    plt.figure(figsize=(10, 8))
+
+    for model_name, data in models_data.items():
+        fpr, tpr, _ = roc_curve(data['y_true'], data['y_score'])
+        roc_auc = auc(fpr, tpr)
+        plt.plot(fpr, tpr, linewidth=2, label=f'{model_name} (AUC = {roc_auc:.3f})')
+
+    plt.plot([0, 1], [0, 1], 'k--', linewidth=1, label='Random (AUC = 0.500)')
+    plt.xlabel('False Positive Rate', fontsize=12)
+    plt.ylabel('True Positive Rate', fontsize=12)
+    plt.title(title, fontsize=14, fontweight='bold')
+    plt.legend(fontsize=11)
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=300)
+    plt.close()
+
+    logger.info(f"ROC curves saved to {output_path}")
+
+
+def plot_all_confusion_matrices(models_data: dict, labels: List[str], output_path: str):
+    """
+    Plot confusion matrices for multiple models in a grid.
+
+    Args:
+        models_data: {model_name: {'y_true': list, 'y_pred': list}}
+        labels: class names
+        output_path: path to save figure
+    """
+    n_models = len(models_data)
+    cols = min(n_models, 2)
+    rows = (n_models + cols - 1) // cols
+
+    fig, axes = plt.subplots(rows, cols, figsize=(7 * cols, 6 * rows))
+    if n_models == 1:
+        axes = np.array([axes])
+    axes = axes.flatten()
+
+    for idx, (model_name, data) in enumerate(models_data.items()):
+        cm = confusion_matrix(data['y_true'], data['y_pred'], labels=labels)
+        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
+                    xticklabels=labels, yticklabels=labels, ax=axes[idx])
+        axes[idx].set_title(f'{model_name}', fontsize=13, fontweight='bold')
+        axes[idx].set_xlabel('Predicted')
+        axes[idx].set_ylabel('True')
+
+    for idx in range(n_models, len(axes)):
+        axes[idx].set_visible(False)
+
+    plt.suptitle('Confusion Matrices', fontsize=16, fontweight='bold', y=1.02)
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    plt.close()
+
+    logger.info(f"Confusion matrices saved to {output_path}")
+
+
 def main():
     """Main evaluation entry point."""
     parser = argparse.ArgumentParser(description="Evaluate hate speech detection models")
     parser.add_argument('--data', type=str, required=True, help="Path to test data")
     parser.add_argument('--text-column', type=str, default='text')
     parser.add_argument('--label-column', type=str, default='label')
-    parser.add_argument('--model', type=str, choices=['baseline', 'bertic'], required=True)
+    parser.add_argument('--model', type=str, choices=['baseline', 'bertic', 'xlm_roberta'], required=True)
     parser.add_argument('--model-path', type=str, required=True, help="Path to model checkpoint")
     parser.add_argument('--output', type=str, default='evaluation_results')
     parser.add_argument('--device', type=str, default=None)
@@ -198,6 +296,11 @@ def main():
     # Evaluate model
     if args.model == 'baseline':
         results = evaluate_baseline(args.model_path, texts, labels)
+    elif args.model == 'xlm_roberta':
+        from src.models.xlm_roberta import XLMRobertaTrainer
+        trainer = XLMRobertaTrainer(device=args.device)
+        trainer.load(args.model_path)
+        results = trainer.evaluate(texts, labels)
     else:
         results = evaluate_bertic(args.model_path, texts, labels, args.device)
 

@@ -160,6 +160,29 @@ models:
       gamma: 2.0
       alpha: 1.0
 
+  # Multilingual comparison: XLM-RoBERTa
+  xlm_roberta:
+    model_name: "xlm-roberta-base"
+
+    architecture:
+      num_labels: 2  # ACC, OFF (binary)
+      hidden_dropout_prob: 0.1
+      classifier_dropout: 0.1
+
+    training:
+      learning_rate: 2.0e-5
+      batch_size: 16
+      num_epochs: 5
+      warmup_ratio: 0.1
+      weight_decay: 0.01
+      max_length: 256
+      gradient_accumulation_steps: 2
+
+    loss:
+      type: "focal"
+      gamma: 2.0
+      alpha: 1.0
+
   # Advanced: Lexicon-enhanced model
   lexicon_enhanced:
     base_model: "classla/bcms-bertic"
