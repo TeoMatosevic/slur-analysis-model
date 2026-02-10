@@ -107,7 +107,7 @@ class XLMRobertaClassifier(nn.Module):
             self.encoder = AutoModel.from_pretrained(model_name)
         self.dropout = nn.Dropout(dropout)
         self.classifier = nn.Linear(self.encoder.config.hidden_size, num_labels)
-        self.loss_fn = FocalLoss(gamma=2.0)
+        self.loss_fn = nn.CrossEntropyLoss()
         if freeze_bert:
             for param in self.encoder.parameters():
                 param.requires_grad = False
