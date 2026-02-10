@@ -58,7 +58,7 @@ class FocalLoss(nn.Module):
     def forward(self, inputs: torch.Tensor, targets: torch.Tensor) -> torch.Tensor:
         ce_loss = F.cross_entropy(inputs, targets, reduction='none')
         pt = torch.exp(-ce_loss)
-        focal_loss = self.alpha * (1 - pt) ** self.gamma * ce_loss
+        focal_loss = self.alpha * torch.pow(1.0 - pt, self.gamma) * ce_loss
         if self.reduction == 'mean':
             return focal_loss.mean()
         elif self.reduction == 'sum':
@@ -89,7 +89,7 @@ class HateSpeechDataset(Dataset):
         return {
             'input_ids': encoding['input_ids'].flatten(),
             'attention_mask': encoding['attention_mask'].flatten(),
-            'labels': torch.tensor(label, dtype=torch.long)
+            'labels': torch.tensor(int(label), dtype=torch.long)
         }
 
 
@@ -107,6 +107,7 @@ class XLMRobertaClassifier(nn.Module):
             self.encoder = AutoModel.from_pretrained(model_name)
         self.dropout = nn.Dropout(dropout)
         self.classifier = nn.Linear(self.encoder.config.hidden_size, num_labels)
+        self.loss_fn = FocalLoss(gamma=2.0)
         if freeze_bert:
             for param in self.encoder.parameters():
                 param.requires_grad = False
@@ -119,8 +120,7 @@ class XLMRobertaClassifier(nn.Module):
         logits = self.classifier(pooled_output)
         result = {'logits': logits}
         if labels is not None:
-            loss_fn = FocalLoss(gamma=2.0)
-            result['loss'] = loss_fn(logits, labels)
+            result['loss'] = self.loss_fn(logits, labels)
         return result
 
 
