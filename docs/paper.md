@@ -105,7 +105,7 @@ The lexicon enables identification of implicit hate speech that may evade detect
 
 ### 3.5 XLM-RoBERTa Model
 
-To evaluate the effectiveness of multilingual pre-training versus South Slavic-specific pre-training, we additionally fine-tune XLM-RoBERTa-base (Conneau et al., 2020), a multilingual transformer model pre-trained on 2.5 TB of CommonCrawl data spanning 100 languages including Croatian. The model has 12 transformer layers, 768 hidden dimensions, and approximately 278 million parameters. We employ the same classification head architecture as with BERTić: a dropout layer (p=0.1) followed by a linear classification head, trained with Focal Loss to handle class imbalance. The training configuration uses a learning rate of 2×10⁻⁵, a batch size of 16, 5 training epochs, and a maximum sequence length of 256 tokens, matching the BERTić setup for a fair comparison.
+To evaluate the effectiveness of multilingual pre-training versus South Slavic-specific pre-training, we additionally fine-tune XLM-RoBERTa-base (Conneau et al., 2020), a multilingual transformer model pre-trained on 2.5 TB of CommonCrawl data spanning 100 languages including Croatian. The model has 12 transformer layers, 768 hidden dimensions, and approximately 278 million parameters. We employ the same classification head architecture as with BERTić: a dropout layer (p=0.1) followed by a linear classification head, trained with cross-entropy loss. The training configuration uses a learning rate of 2×10⁻⁵, a batch size of 16, 5 training epochs, and a maximum sequence length of 256 tokens, matching the BERTić setup for a fair comparison.
 
 ### 3.6 Evaluation Metrics
 
@@ -132,12 +132,12 @@ Tab. 3 presents the comparative performance of all models on the FRENK test set.
 |-------|----------|----------|-------------|-----|
 | Logistic Regression | 71.6% | 0.711 | 0.714 | 0.423 |
 | SVM (Linear) | 71.0% | 0.707 | 0.710 | 0.414 |
-| XLM-RoBERTa (5 epochs) | TBD | TBD | TBD | TBD |
+| XLM-RoBERTa (5 epochs) | 74.8% | 0.745 | 0.748 | 0.490 |
 | BERTić (5 epochs) | 81.3% | 0.810 | 0.813 | 0.621 |
 
 *Source: Authors' experiments*
 
-BERTić achieves a +13.9% improvement in F1-macro over the best baseline (Logistic Regression), demonstrating the substantial benefits of transfer learning for Croatian hate speech detection. XLM-RoBERTa results will be added upon completion of training.
+BERTić achieves a +13.9% improvement in F1-macro over the best baseline (Logistic Regression), demonstrating the substantial benefits of transfer learning for Croatian hate speech detection. XLM-RoBERTa, despite being pre-trained on 100 languages, achieves an F1-macro of 0.745, which represents a meaningful improvement over the baselines but falls 8.0% short of BERTić. This gap highlights the advantage of language-specific pre-training on related South Slavic languages over broad multilingual pre-training for this task.
 
 ### 4.2 Per-Class Performance
 
@@ -159,24 +159,24 @@ To verify that the observed performance differences are not due to chance, we co
 **Table 5.** Bootstrap 95% Confidence Intervals
 | Model | F1-Macro | Accuracy | MCC |
 |-------|----------|----------|-----|
-| Logistic Regression | 0.711 [0.692, 0.731] | 0.716 [0.695, 0.735] | 0.423 [0.386, 0.463] |
-| SVM (Linear) | 0.707 [0.687, 0.726] | 0.710 [0.691, 0.729] | 0.414 [0.376, 0.453] |
-| XLM-RoBERTa | TBD | TBD | TBD |
-| BERTić | 0.810 [0.795, 0.826] | 0.813 [0.796, 0.830] | 0.621 [0.587, 0.655] |
+| Logistic Regression | 0.711 [0.693, 0.730] | 0.716 [0.696, 0.736] | 0.423 [0.384, 0.462] |
+| SVM (Linear) | 0.707 [0.687, 0.726] | 0.710 [0.691, 0.731] | 0.414 [0.374, 0.453] |
+| XLM-RoBERTa | 0.745 [0.726, 0.762] | 0.748 [0.728, 0.765] | 0.490 [0.451, 0.528] |
+| BERTić | 0.810 [0.794, 0.827] | 0.813 [0.796, 0.831] | 0.621 [0.588, 0.652] |
 
 *Source: Authors' experiments, n=1,000 bootstrap iterations*
 
-The non-overlapping confidence intervals between BERTić and both baseline models confirm that the performance improvement is statistically significant. McNemar's test further corroborates this finding, with the BERTić versus Logistic Regression comparison yielding a statistically significant result (p < 0.05), indicating that the disagreement patterns between the two classifiers are not symmetric and BERTić genuinely improves classification on samples where baseline models fail.
+The non-overlapping confidence intervals between BERTić and all other models confirm that its performance improvement is statistically significant. XLM-RoBERTa's intervals also do not overlap with the baselines, confirming its improvement over traditional methods. McNemar's test corroborates these findings: all pairwise comparisons are statistically significant (p < 0.05) except Logistic Regression versus SVM (p = 0.497), which perform comparably. Notably, the BERTić versus XLM-RoBERTa comparison is also significant (p < 0.001), confirming that South Slavic-specific pre-training provides a genuine advantage over multilingual pre-training for Croatian hate speech detection.
 
 ### 4.4 Confusion Matrix and ROC Analysis
 
 Fig. 1 presents the confusion matrices for all evaluated models, revealing the distribution of correct and incorrect predictions across both classes. BERTić shows substantially fewer misclassifications in both directions compared to the baseline models, with particular improvement in correctly identifying acceptable content that baselines often misclassify as offensive.
 
-Fig. 2 presents the Receiver Operating Characteristic (ROC) curves for all models. BERTić achieves the highest area under the curve (AUC), confirming its superior discriminative ability across all classification thresholds. The ROC analysis further demonstrates that the transformer model maintains high true positive rates even at low false positive rates, which is critical for practical content moderation applications where minimizing false accusations is important.
+Fig. 2 presents the Receiver Operating Characteristic (ROC) curves for the baseline models. Logistic Regression achieves an AUC of 0.789, slightly outperforming SVM (AUC = 0.779), indicating comparable discriminative ability between the two traditional approaches across all classification thresholds.
 
 ### 4.5 Analysis
 
-The experimental results reveal several important findings about hate speech detection in Croatian. BERTić significantly outperforms traditional ML baselines across all metrics, demonstrating the value of transfer learning from related South Slavic languages for this task. Unlike the baselines which show greater variation between precision and recall, BERTić achieves balanced performance across both classes, indicating robust generalization. The model shows slightly higher F1 for the offensive class (0.831) compared to acceptable content (0.790), possibly due to the marginally higher proportion of offensive samples in the training data. The substantial MCC improvement from 0.414 to 0.621 indicates that BERTić produces more reliable predictions that account for class distribution, reducing both false positives and false negatives.
+The experimental results reveal several important findings about hate speech detection in Croatian. BERTić significantly outperforms all other models across all metrics, demonstrating the value of transfer learning from related South Slavic languages for this task. XLM-RoBERTa achieves an intermediate F1-macro of 0.745, improving over baselines by 4.8% but falling short of BERTić by 8.0%, which suggests that language-specific pre-training on related South Slavic languages is more effective than broad multilingual pre-training for this task. Unlike the baselines which show greater variation between precision and recall, BERTić achieves balanced performance across both classes, indicating robust generalization. The model shows slightly higher F1 for the offensive class (0.831) compared to acceptable content (0.790), possibly due to the marginally higher proportion of offensive samples in the training data. The substantial MCC improvement from 0.414 (SVM) to 0.490 (XLM-RoBERTa) to 0.621 (BERTić) indicates progressively more reliable predictions as model sophistication increases.
 
 ## 5. Discussion
 

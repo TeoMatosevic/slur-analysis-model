@@ -1,20 +1,164 @@
 {
   "bootstrap_ci": {
     "Logistic Regression": {
-      "F1-Macro": {"point": 0.711, "lower": 0.692, "upper": 0.731},
-      "Accuracy": {"point": 0.716, "lower": 0.695, "upper": 0.735},
-      "MCC": {"point": 0.423, "lower": 0.386, "upper": 0.463}
+      "F1-Macro": {
+        "point": 0.711256405964874,
+        "lower": 0.6925392545155763,
+        "upper": 0.7304745823812656
+      },
+      "Accuracy": {
+        "point": 0.715566037735849,
+        "lower": 0.6962146226415094,
+        "upper": 0.7358490566037735
+      },
+      "MCC": {
+        "point": 0.4225157296942168,
+        "lower": 0.3843565196947232,
+        "upper": 0.46205455394825046
+      }
     },
     "SVM (Linear)": {
-      "F1-Macro": {"point": 0.707, "lower": 0.687, "upper": 0.726},
-      "Accuracy": {"point": 0.710, "lower": 0.691, "upper": 0.729},
-      "MCC": {"point": 0.414, "lower": 0.376, "upper": 0.453}
+      "F1-Macro": {
+        "point": 0.7066599530088954,
+        "lower": 0.6870825433453372,
+        "upper": 0.7264052950477076
+      },
+      "Accuracy": {
+        "point": 0.7099056603773585,
+        "lower": 0.6910377358490566,
+        "upper": 0.7306721698113208
+      },
+      "MCC": {
+        "point": 0.41380689126145437,
+        "lower": 0.3741515554788289,
+        "upper": 0.4528849123186269
+      }
     },
-    "BERTić": {
-      "F1-Macro": {"point": 0.810, "lower": 0.795, "upper": 0.826},
-      "Accuracy": {"point": 0.813, "lower": 0.796, "upper": 0.830},
-      "MCC": {"point": 0.621, "lower": 0.587, "upper": 0.655}
+    "BERTi\u0107": {
+      "F1-Macro": {
+        "point": 0.8104857894740397,
+        "lower": 0.7940361382621565,
+        "upper": 0.8269534047088978
+      },
+      "Accuracy": {
+        "point": 0.8127358490566038,
+        "lower": 0.7962264150943397,
+        "upper": 0.8311320754716981
+      },
+      "MCC": {
+        "point": 0.6213256505461998,
+        "lower": 0.5877105840256045,
+        "upper": 0.6518091353840952
+      }
+    },
+    "XLM-RoBERTa": {
+      "F1-Macro": {
+        "point": 0.7447665554624165,
+        "lower": 0.7261961055366014,
+        "upper": 0.7624430174310558
+      },
+      "Accuracy": {
+        "point": 0.7476415094339622,
+        "lower": 0.7278301886792453,
+        "upper": 0.7651061320754717
+      },
+      "MCC": {
+        "point": 0.4899955764552444,
+        "lower": 0.45140283677488735,
+        "upper": 0.5275149550887519
+      }
     }
   },
-  "note": "Bootstrap CIs from 1000 resamples, 95% confidence. BERTic vs baseline CIs do not overlap, indicating statistical significance at p<0.05."
+  "mcnemar_tests": {
+    "Logistic Regression vs SVM (Linear)": {
+      "statistic": 125.0,
+      "p_value": 0.49684344051677404,
+      "significant": "False",
+      "contingency_table": [
+        [
+          1380,
+          137
+        ],
+        [
+          125,
+          478
+        ]
+      ]
+    },
+    "Logistic Regression vs BERTi\u0107": {
+      "statistic": 185.0,
+      "p_value": 5.876179888803185e-18,
+      "significant": "True",
+      "contingency_table": [
+        [
+          1332,
+          185
+        ],
+        [
+          391,
+          212
+        ]
+      ]
+    },
+    "Logistic Regression vs XLM-RoBERTa": {
+      "statistic": 263.0,
+      "p_value": 0.005930789730827995,
+      "significant": "True",
+      "contingency_table": [
+        [
+          1254,
+          263
+        ],
+        [
+          331,
+          272
+        ]
+      ]
+    },
+    "SVM (Linear) vs BERTi\u0107": {
+      "statistic": 181.0,
+      "p_value": 7.5204239717241e-20,
+      "significant": "True",
+      "contingency_table": [
+        [
+          1324,
+          181
+        ],
+        [
+          399,
+          216
+        ]
+      ]
+    },
+    "SVM (Linear) vs XLM-RoBERTa": {
+      "statistic": 263.0,
+      "p_value": 0.0013122633908960602,
+      "significant": "True",
+      "contingency_table": [
+        [
+          1242,
+          263
+        ],
+        [
+          343,
+          272
+        ]
+      ]
+    },
+    "BERTi\u0107 vs XLM-RoBERTa": {
+      "statistic": 140.0,
+      "p_value": 1.3615332503482575e-11,
+      "significant": "True",
+      "contingency_table": [
+        [
+          1445,
+          278
+        ],
+        [
+          140,
+          257
+        ]
+      ]
+    }
+  }
 }
