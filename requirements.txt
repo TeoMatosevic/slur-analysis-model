@@ -18,6 +18,7 @@ scipy>=1.11.0
 # Data Processing
 pandas>=2.0.0              # Data manipulation
 datasets>=2.14.0           # HuggingFace datasets (for FRENK)
+huggingface_hub>=0.17.0    # Model upload/download from HuggingFace Hub
 
 # Web Scraping
 beautifulsoup4>=4.12.0     # HTML parsing

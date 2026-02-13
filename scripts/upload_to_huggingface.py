@@ -70,10 +70,38 @@ def upload_baseline_model(username: str):
     print(f"\nBaseline model uploaded to: https://huggingface.co/{repo_name}")
 
 
+def upload_xlm_roberta_model(username: str):
+    """Upload XLM-RoBERTa model to HuggingFace."""
+    api = HfApi()
+
+    repo_name = f"{username}/croatian-hate-speech-xlm-roberta"
+    model_path = Path("checkpoints/xlm_roberta/best_model")
+
+    if not model_path.exists():
+        print("XLM-RoBERTa model not found at checkpoints/xlm_roberta/best_model/")
+        return
+
+    print(f"Creating repository: {repo_name}")
+    try:
+        create_repo(repo_name, repo_type="model", exist_ok=True)
+    except Exception as e:
+        print(f"Repository may already exist: {e}")
+
+    print(f"Uploading XLM-RoBERTa model from {model_path}...")
+
+    api.upload_folder(
+        folder_path=str(model_path),
+        repo_id=repo_name,
+        repo_type="model"
+    )
+
+    print(f"\nXLM-RoBERTa model uploaded to: https://huggingface.co/{repo_name}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="Upload models to HuggingFace Hub")
     parser.add_argument("--username", "-u", required=True, help="Your HuggingFace username")
-    parser.add_argument("--model", "-m", choices=["bertic", "baseline", "all"],
+    parser.add_argument("--model", "-m", choices=["bertic", "baseline", "xlm_roberta", "all"],
                         default="all", help="Which model to upload")
 
     args = parser.parse_args()
@@ -87,6 +115,9 @@ def main():
 
     if args.model in ["bertic", "all"]:
         upload_bertic_model(args.username)
+
+    if args.model in ["xlm_roberta", "all"]:
+        upload_xlm_roberta_model(args.username)
 
     if args.model in ["baseline", "all"]:
         upload_baseline_model(args.username)

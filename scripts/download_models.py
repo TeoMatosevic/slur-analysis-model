@@ -16,6 +16,7 @@ from pathlib import Path
 
 # UPDATE THESE WITH YOUR ACTUAL HUGGINGFACE REPO NAMES
 BERTIC_REPO = "TeoMatosevic/croatian-hate-speech-bertic"
+XLM_ROBERTA_REPO = "TeoMatosevic/croatian-hate-speech-xlm-roberta"
 BASELINE_REPO = "TeoMatosevic/croatian-hate-speech-baseline"
 
 
@@ -57,6 +58,25 @@ def download_baseline():
         return False
 
 
+def download_xlm_roberta():
+    """Download XLM-RoBERTa model."""
+    print("Downloading XLM-RoBERTa model...")
+    local_dir = Path("checkpoints/xlm_roberta/best_model")
+    local_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        snapshot_download(
+            repo_id=XLM_ROBERTA_REPO,
+            local_dir=str(local_dir),
+            local_dir_use_symlinks=False
+        )
+        print(f"  Downloaded to: {local_dir}")
+        return True
+    except Exception as e:
+        print(f"  Failed: {e}")
+        return False
+
+
 def main():
     print("="*60)
     print("Croatian Hate Speech Detection - Model Download")
@@ -65,11 +85,13 @@ def main():
 
     success_bertic = download_bertic()
     print()
+    success_xlm = download_xlm_roberta()
+    print()
     success_baseline = download_baseline()
 
     print()
     print("="*60)
-    if success_bertic and success_baseline:
+    if success_bertic and success_xlm and success_baseline:
         print("All models downloaded successfully!")
         print("\nYou can now run:")
         print("  python src/demo.py --text 'Your text here'")

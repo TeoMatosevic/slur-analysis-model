@@ -55,6 +55,7 @@ Models are available on HuggingFace Hub for easy download:
 | Model | HuggingFace | Description | F1-Macro |
 |-------|-------------|-------------|----------|
 | BERTić | [TeoMatosevic/croatian-hate-speech-bertic](https://huggingface.co/TeoMatosevic/croatian-hate-speech-bertic) | Fine-tuned transformer | **0.810** |
+| XLM-RoBERTa | [TeoMatosevic/croatian-hate-speech-xlm-roberta](https://huggingface.co/TeoMatosevic/croatian-hate-speech-xlm-roberta) | Fine-tuned multilingual transformer | 0.745 |
 | Baseline | [TeoMatosevic/croatian-hate-speech-baseline](https://huggingface.co/TeoMatosevic/croatian-hate-speech-baseline) | TF-IDF + Logistic Regression | 0.711 |
 
 ## Installation
@@ -205,7 +206,7 @@ Model: [classla/bcms-bertic](https://huggingface.co/classla/bcms-bertic)
 
 - Multilingual model pre-trained on 100 languages including Croatian
 - 278M parameters, fine-tuned for binary classification
-- Focal loss for class imbalance
+- Cross-entropy loss
 
 Model: [xlm-roberta-base](https://huggingface.co/xlm-roberta-base)
 
@@ -296,7 +297,7 @@ pip install torch --index-url https://download.pytorch.org/whl/cu118
 |-------|----------|----------|-------------|-----|
 | Logistic Regression | 71.6% | 0.711 | 0.714 | 0.423 |
 | SVM (Linear) | 71.0% | 0.707 | 0.710 | 0.414 |
-| XLM-RoBERTa (5 epochs) | TBD | TBD | TBD | TBD |
+| XLM-RoBERTa (5 epochs) | 74.8% | 0.745 | 0.748 | 0.490 |
 | BERTić (5 epochs) | 81.3% | 0.810 | 0.813 | 0.621 |
 
 BERTić achieves **+13.9% F1 improvement** over baselines.
