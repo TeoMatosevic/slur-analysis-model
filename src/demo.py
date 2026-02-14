@@ -29,10 +29,12 @@ from typing import Optional
 
 from src.models.baseline import BaselineClassifier
 from src.models.bertic import BERTicTrainer
+from src.models.xlm_roberta import XLMRobertaTrainer
 from src.utils.lexicon import CodedTermLexicon
 
 
-def load_models(baseline_path: Optional[str], bertic_path: Optional[str]):
+def load_models(baseline_path: Optional[str], bertic_path: Optional[str],
+                xlm_roberta_path: Optional[str] = None):
     """Load available models."""
     models = {}
 
@@ -47,6 +49,13 @@ def load_models(baseline_path: Optional[str], bertic_path: Optional[str]):
         trainer.load(bertic_path)
         models['bertic'] = trainer
         print("  BERTić loaded.")
+
+    if xlm_roberta_path and Path(xlm_roberta_path).exists():
+        print(f"Loading XLM-RoBERTa model from {xlm_roberta_path}...")
+        trainer = XLMRobertaTrainer()
+        trainer.load(xlm_roberta_path)
+        models['xlm_roberta'] = trainer
+        print("  XLM-RoBERTa loaded.")
 
     return models
 
@@ -117,6 +126,15 @@ def analyze_text(text: str, models: dict, lexicon: Optional[CodedTermLexicon]):
             except Exception as e:
                 pass
 
+    # XLM-RoBERTa prediction
+    if 'xlm_roberta' in models:
+        xlm = models['xlm_roberta']
+        pred = xlm.predict([text])[0]
+        probs = xlm.predict_proba([text])[0]
+
+        print(f"\n[XLM-RoBERTa] Prediction: {pred}")
+        print(f"  Probabilities: ACC={probs[0]:.1%}, OFF={probs[1]:.1%}")
+
     # BERTić prediction
     if 'bertic' in models:
         bertic = models['bertic']
@@ -185,21 +203,27 @@ def main():
     parser.add_argument('--lexicon', type=str,
                         default='data/lexicon/coded_terms.json',
                         help="Path to coded terms lexicon")
+    parser.add_argument('--xlm-roberta', type=str,
+                        default='checkpoints/xlm_roberta/best_model',
+                        help="Path to XLM-RoBERTa model")
     parser.add_argument('--no-baseline', action='store_true', help="Skip baseline model")
     parser.add_argument('--no-bertic', action='store_true', help="Skip BERTić model")
+    parser.add_argument('--no-xlm-roberta', action='store_true', help="Skip XLM-RoBERTa model")
 
     args = parser.parse_args()
 
     # Load models
     baseline_path = None if args.no_baseline else args.baseline
     bertic_path = None if args.no_bertic else args.bertic
+    xlm_roberta_path = None if args.no_xlm_roberta else args.xlm_roberta
 
-    models = load_models(baseline_path, bertic_path)
+    models = load_models(baseline_path, bertic_path, xlm_roberta_path)
 
     if not models:
         print("No models loaded! Check paths.")
         print(f"  Baseline: {args.baseline}")
         print(f"  BERTić: {args.bertic}")
+        print(f"  XLM-RoBERTa: {args.xlm_roberta}")
         return
 
     # Load lexicon

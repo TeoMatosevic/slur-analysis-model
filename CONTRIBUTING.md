@@ -13,8 +13,8 @@ Thank you for your interest in contributing to the Croatian Hate Speech Detectio
 
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/opj.git
-cd opj
+git clone https://github.com/TeoMatosevic/slur-analysis-model.git
+cd slur-analysis-model
 
 # Create virtual environment
 python -m venv venv
@@ -38,7 +38,7 @@ opj/
 │   ├── processed/     # Training data (FRENK dataset)
 │   └── lexicon/       # Coded terms lexicon
 ├── src/
-│   ├── models/        # ML models (baseline, BERTić)
+│   ├── models/        # ML models (baseline, BERTić, XLM-RoBERTa)
 │   ├── training/      # Training and evaluation scripts
 │   ├── preprocessing/ # Text preprocessing with CLASSLA
 │   ├── scraping/      # Web scraping utilities

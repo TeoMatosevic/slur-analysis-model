@@ -25,8 +25,8 @@ If ROCm isn't installed, see: https://rocm.docs.amd.com/en/latest/deploy/linux/q
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/croatian-hate-speech-detection.git
-cd croatian-hate-speech-detection
+git clone https://github.com/TeoMatosevic/slur-analysis-model.git
+cd slur-analysis-model
 
 # Create virtual environment
 python -m venv venv
@@ -64,17 +64,10 @@ bertic:
   training:
     learning_rate: 2.0e-5
     batch_size: 16
-    num_epochs: 5      # Change this: 3-5 recommended
+    num_epochs: 5      # Default: 5 (3-5 recommended)
     warmup_ratio: 0.1
     weight_decay: 0.01
     max_length: 256
-```
-
-Or use `sed` to change it quickly:
-
-```bash
-# Set to 5 epochs
-sed -i 's/num_epochs: 1/num_epochs: 5/' configs/config.yaml
 ```
 
 ### 6. Run Training
@@ -137,8 +130,8 @@ python src/training/evaluate.py \
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/croatian-hate-speech-detection.git
-cd croatian-hate-speech-detection
+git clone https://github.com/TeoMatosevic/slur-analysis-model.git
+cd slur-analysis-model
 
 # Create virtual environment
 python -m venv venv
@@ -242,24 +235,22 @@ export CUDA_VISIBLE_DEVICES=0
 ### AMD ROCm Setup (One Command)
 
 ```bash
-git clone <repo-url> && cd croatian-hate-speech-detection && \
+git clone https://github.com/TeoMatosevic/slur-analysis-model.git && cd slur-analysis-model && \
 python -m venv venv && source venv/bin/activate && \
 pip install torch --index-url https://download.pytorch.org/whl/rocm6.0 && \
 pip install -r requirements.txt && \
 python -c "import classla; classla.download('hr', type='nonstandard')" && \
-sed -i 's/num_epochs: 1/num_epochs: 5/' configs/config.yaml && \
 python src/training/train.py --data data/processed/frenk_train.jsonl --model bertic --output checkpoints/bertic
 ```
 
 ### NVIDIA CUDA Setup (One Command)
 
 ```bash
-git clone <repo-url> && cd croatian-hate-speech-detection && \
+git clone https://github.com/TeoMatosevic/slur-analysis-model.git && cd slur-analysis-model && \
 python -m venv venv && source venv/bin/activate && \
 pip install torch --index-url https://download.pytorch.org/whl/cu118 && \
 pip install -r requirements.txt && \
 python -c "import classla; classla.download('hr', type='nonstandard')" && \
-sed -i 's/num_epochs: 1/num_epochs: 5/' configs/config.yaml && \
 python src/training/train.py --data data/processed/frenk_train.jsonl --model bertic --output checkpoints/bertic
 ```
 

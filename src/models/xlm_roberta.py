@@ -323,3 +323,90 @@ class XLMRobertaTrainer:
         ).to(self.device)
         self.model.load_state_dict(torch.load(path / 'model.pt', map_location=self.device, weights_only=False))
         logger.info(f"Model loaded from {path}")
+
+
+def main():
+    """Main entry point for XLM-RoBERTa training."""
+    parser = argparse.ArgumentParser(description="Train XLM-RoBERTa hate speech classifier")
+    parser.add_argument('--data', type=str, help="Path to training data (CSV or JSONL)")
+    parser.add_argument('--text-column', type=str, default='text')
+    parser.add_argument('--label-column', type=str, default='label')
+    parser.add_argument('--model', type=str, default=XLM_ROBERTA_MODEL,
+                        help=f"Model name (default: {XLM_ROBERTA_MODEL})")
+    parser.add_argument('--output', type=str, default='checkpoints/xlm_roberta')
+    parser.add_argument('--epochs', type=int, default=5)
+    parser.add_argument('--batch-size', type=int, default=16)
+    parser.add_argument('--learning-rate', type=float, default=2e-5)
+    parser.add_argument('--max-length', type=int, default=256)
+    parser.add_argument('--test-split', type=float, default=0.15)
+    parser.add_argument('--device', type=str, default=None)
+    parser.add_argument('--test', action='store_true', help="Run test mode")
+
+    args = parser.parse_args()
+
+    if args.test:
+        logger.info("Running in test mode")
+        print("Test mode: XLM-RoBERTa module loaded successfully")
+        print(f"Transformers available: {TRANSFORMERS_AVAILABLE}")
+        print(f"CUDA available: {torch.cuda.is_available()}")
+
+        if TRANSFORMERS_AVAILABLE:
+            print(f"\nTesting tokenizer loading from {XLM_ROBERTA_MODEL}...")
+            try:
+                tokenizer = AutoTokenizer.from_pretrained(XLM_ROBERTA_MODEL)
+                test_text = "Ovo je testna rečenica na hrvatskom jeziku."
+                tokens = tokenizer(test_text)
+                print(f"Input: {test_text}")
+                print(f"Tokens: {tokens['input_ids'][:10]}...")
+                print("Tokenizer loaded successfully!")
+            except Exception as e:
+                print(f"Tokenizer loading failed: {e}")
+                print("You may need to run: pip install transformers sentencepiece")
+
+        return
+
+    if not args.data:
+        parser.error("--data is required (unless --test is specified)")
+
+    # Load data
+    data_path = Path(args.data)
+    if data_path.suffix == '.csv':
+        df = pd.read_csv(data_path)
+    else:
+        df = pd.read_json(data_path, lines=data_path.suffix == '.jsonl')
+
+    texts = df[args.text_column].tolist()
+    labels = df[args.label_column].tolist()
+
+    # Split data
+    from sklearn.model_selection import train_test_split
+    train_texts, val_texts, train_labels, val_labels = train_test_split(
+        texts, labels, test_size=args.test_split, random_state=42, stratify=labels
+    )
+
+    # Initialize trainer
+    trainer = XLMRobertaTrainer(
+        model_name=args.model,
+        num_labels=len(set(labels)),
+        learning_rate=args.learning_rate,
+        batch_size=args.batch_size,
+        max_length=args.max_length,
+        num_epochs=args.epochs,
+        device=args.device
+    )
+
+    # Train
+    history = trainer.train(
+        train_texts, train_labels,
+        val_texts, val_labels,
+        output_dir=args.output
+    )
+
+    # Final evaluation
+    logger.info("\nFinal evaluation on validation set:")
+    metrics = trainer.evaluate(val_texts, val_labels)
+    print(json.dumps(metrics, indent=2, default=str))
+
+
+if __name__ == "__main__":
+    main()

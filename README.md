@@ -275,6 +275,7 @@ pip install torch --index-url https://download.pytorch.org/whl/cu118
 
 **Our Models:**
 - **Fine-tuned BERTić**: [https://huggingface.co/TeoMatosevic/croatian-hate-speech-bertic](https://huggingface.co/TeoMatosevic/croatian-hate-speech-bertic)
+- **XLM-RoBERTa**: [https://huggingface.co/TeoMatosevic/croatian-hate-speech-xlm-roberta](https://huggingface.co/TeoMatosevic/croatian-hate-speech-xlm-roberta)
 - **Baseline Model**: [https://huggingface.co/TeoMatosevic/croatian-hate-speech-baseline](https://huggingface.co/TeoMatosevic/croatian-hate-speech-baseline)
 
 **External Resources:**
